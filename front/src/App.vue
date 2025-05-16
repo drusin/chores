@@ -20,6 +20,7 @@
             <div class="info">
               <h3>{{ chore.title }}</h3>
               <p v-if="chore.due">Due: {{ chore.due }}</p>
+              <img v-if="chore.image" :src="chore.image" alt="Chore" class="chore-image" />
             </div>
             <div class="status">
               <button @click="cycleStatus(getChoreIndex(chore))">{{ chore.status }}</button>
@@ -42,6 +43,7 @@
           <option>All</option>
         </select>
         <input type="date" v-model="newChore.due" />
+        <input v-model="newChore.image" placeholder="Image URL (optional)" />
         <div class="modal-actions">
           <button @click="addChore">Save</button>
           <button @click="showForm = false">Cancel</button>
@@ -59,12 +61,12 @@ export default {
     const showForm = ref(false);
 
     const chores = ref([
-      { title: 'Take out trash', assigned: 'Dad', due: '2025-05-17', status: 'Planned' },
-      { title: 'Clean kitchen', assigned: 'Mom', due: '2025-05-16', status: 'Planned' },
-      { title: 'Do homework', assigned: 'Son', due: '2025-05-15', status: 'Done' },
+      { title: 'Take out trash', assigned: 'Dad', due: '2025-05-17', status: 'Planned', image: '' },
+      { title: 'Clean kitchen', assigned: 'Mom', due: '2025-05-16', status: 'Planned', image: '' },
+      { title: 'Do homework', assigned: 'Son', due: '2025-05-15', status: 'Done', image: '' },
     ]);
 
-    const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned' });
+    const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' });
 
     const todayStr = new Date().toISOString().split('T')[0];
 
@@ -85,7 +87,7 @@ export default {
 
     function addChore() {
       chores.value.push({ ...newChore.value });
-      newChore.value = { title: '', assigned: 'Dad', due: '', status: 'Planned' };
+      newChore.value = { title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' };
       showForm.value = false;
     }
 
@@ -177,6 +179,13 @@ header {
 }
 .chore-card.done {
   background-color: #a5d6a7;
+}
+.chore-image {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-top: 0.5em;
 }
 .add-btn {
   position: fixed;
