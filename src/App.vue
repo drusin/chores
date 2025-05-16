@@ -6,7 +6,10 @@
 
     <main class="lanes">
       <div class="lane" v-for="person in ['Mom', 'Dad', 'Son']" :key="person">
-        <h2>{{ person }}</h2>
+        <div class="lane-header">
+          <img :src="getProfilePic(person)" alt="Profile" class="profile-pic" />
+          <h2>{{ person }}</h2>
+        </div>
         <ul class="chore-list">
           <li
             v-for="(chore, idx) in personChores(person)"
@@ -94,6 +97,15 @@ export default {
       return 'planned';
     }
 
+    function getProfilePic(person) {
+      const map = {
+        Dad: 'https://picsum.photos/seed/dad/40/40',
+        Mom: 'https://picsum.photos/seed/mom/40/40',
+        Son: 'https://picsum.photos/seed/son/40/40'
+      };
+      return map[person];
+    }
+
     return {
       chores,
       personChores,
@@ -103,6 +115,7 @@ export default {
       newChore,
       addChore,
       choreCardClass,
+      getProfilePic
     };
   },
 };
@@ -130,6 +143,18 @@ header {
   border-radius: 8px;
   padding: 0.5em;
   background: #f9f9f9;
+}
+.lane-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .chore-list {
   list-style: none;
