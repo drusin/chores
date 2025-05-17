@@ -4,13 +4,24 @@ import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import jakarta.persistence.GeneratedValue;
 
 @Entity
-public record ChoreEntity(
-    @Id Integer id,
-    String assignedTo,
-    String title,
-    Date date
-) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChoreEntity {
+    @Id @GeneratedValue Long id;
+    String assignedTo;
+    String title;
+    Date date;
+    Integer repeatsInDays;
+   
+    public static ChoreEntity from(ChoreDto chore) {
+        return new ChoreEntity(null, chore.assignedTo(), chore.title(), chore.date(), chore.repeatsInDays());
+    }
     
 }

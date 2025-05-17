@@ -1,0 +1,15 @@
+@address = http://localhost:8080/api
+
+### Get chores
+GET {{address}}/
+
+### Create chore
+POST {{address}}/
+Content-Type: application/json
+
+{
+    "assignedTo": "Dawid",
+    "title": "Müll wegbringen",
+    "date": "2025-05-17",
+    "repeatsInDays": 0
+}
