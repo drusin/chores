@@ -6,5 +6,10 @@ public record ChoreDto(
     String assignedTo,
     String title,
     Date date,
-    Integer repeatsInDays
-) {}
+    Integer repeatsInDays,
+    Boolean done
+) {
+    ChoreDto withDate(Date newDate) {
+        return new ChoreDto(assignedTo, title, newDate, repeatsInDays, done);
+    }
+}

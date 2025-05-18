@@ -19,9 +19,20 @@ public class ChoreEntity {
     String title;
     Date date;
     Integer repeatsInDays;
+    Boolean done;
    
     public static ChoreEntity from(ChoreDto chore) {
-        return new ChoreEntity(null, chore.assignedTo(), chore.title(), chore.date(), chore.repeatsInDays());
+        ChoreEntity entity = new ChoreEntity();
+        entity.update(chore);
+        return entity;
+    }
+
+    public void update(ChoreDto update) {
+        assignedTo = update.assignedTo();
+        title = update.title();
+        date = update.date();
+        repeatsInDays = update.repeatsInDays();
+        done = update.done();
     }
     
 }

@@ -11,5 +11,19 @@ Content-Type: application/json
     "assignedTo": "Dawid",
     "title": "Müll wegbringen",
     "date": "2025-05-17",
-    "repeatsInDays": 0
+    "repeatsInDays": 0,
+    "done": false
+}
+
+### Update chore
+@id = 1
+PUT {{address}}/{{id}}
+Content-Type: application/json
+
+{
+    "assignedTo": "Blubb",
+    "title": "Müll wegbringen",
+    "date": "2025-05-17",
+    "repeatsInDays": 5,
+    "done": false
 }
