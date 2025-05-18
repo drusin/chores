@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ### Update chore
-@id = 1
+@id = 3152
 PUT {{address}}/{{id}}
 Content-Type: application/json
 
@@ -25,5 +25,5 @@ Content-Type: application/json
     "title": "Müll wegbringen",
     "date": "2025-05-17",
     "repeatsInDays": 5,
-    "done": false
+    "done": true
 }

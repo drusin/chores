@@ -9,7 +9,7 @@ public record ChoreDto(
     Integer repeatsInDays,
     Boolean done
 ) {
-    ChoreDto withDate(Date newDate) {
-        return new ChoreDto(assignedTo, title, newDate, repeatsInDays, done);
+    public ChoreDto recurrence(Date newDate) {
+        return new ChoreDto(assignedTo, title, newDate, repeatsInDays, false);
     }
 }

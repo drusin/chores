@@ -45,15 +45,15 @@ public class ChoreApi {
     }
 
     private void createRecurring(ChoreDto choreDto) {
-        // TODO: this results in a loop?
         Instant plannedDate = choreDto.date().toInstant().truncatedTo(ChronoUnit.DAYS);
         Instant now = new Date().toInstant().truncatedTo(ChronoUnit.DAYS);
 
         while (plannedDate.isBefore(now)) {
-            plannedDate.plus(choreDto.repeatsInDays(), ChronoUnit.DAYS);
+            plannedDate = plannedDate.plus(choreDto.repeatsInDays(), ChronoUnit.DAYS);
+            
         }
 
-        ChoreDto nextRecurrence = choreDto.withDate(Date.from(plannedDate));
+        ChoreDto nextRecurrence = choreDto.recurrence(Date.from(plannedDate));
         repository.save(ChoreEntity.from(nextRecurrence));
     }
 }
