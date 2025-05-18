@@ -11,21 +11,13 @@
           <h2>{{ person }}</h2>
         </div>
         <ul class="chore-list">
-          <li
+          <ChoreCard
             v-for="(chore, idx) in personChores(person)"
             :key="idx"
-            class="chore-card"
-            :class="choreCardClass(chore)"
-          >
-            <div class="info">
-              <h3>{{ chore.title }}</h3>
-              <p v-if="chore.due">Due: {{ chore.due }}</p>
-              <img v-if="chore.image" :src="chore.image" alt="Chore" class="chore-image" />
-            </div>
-            <div class="status">
-              <button @click="cycleStatus(getChoreIndex(chore))">{{ chore.status }}</button>
-            </div>
-          </li>
+            :chore="chore"
+            :todayStr="todayStr"
+            @cycle-status="cycleStatus(getChoreIndex(chore))"
+          />
         </ul>
       </div>
     </main>
@@ -53,10 +45,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue';
+import ChoreCard from './ChoreCard.vue';
 
 export default {
+  components: {
+    ChoreCard
+  },
   setup() {
     const showForm = ref(false);
 
@@ -91,14 +87,6 @@ export default {
       showForm.value = false;
     }
 
-    function choreCardClass(chore) {
-      if (chore.status === 'Done') return 'done';
-      if (!chore.due) return 'planned';
-      if (chore.due === todayStr) return 'today';
-      if (chore.due < todayStr) return 'overdue';
-      return 'planned';
-    }
-
     function getProfilePic(person) {
       const map = {
         Dad: 'https://picsum.photos/seed/dad/40/40',
@@ -116,8 +104,8 @@ export default {
       showForm,
       newChore,
       addChore,
-      choreCardClass,
-      getProfilePic
+      getProfilePic,
+      todayStr
     };
   },
 };
@@ -161,31 +149,6 @@ header {
 .chore-list {
   list-style: none;
   padding: 0;
-}
-.chore-card {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 0.5em;
-  margin-bottom: 0.5em;
-}
-.chore-card.planned {
-  background-color: #e0e0e0;
-}
-.chore-card.today {
-  background-color: #fff59d;
-}
-.chore-card.overdue {
-  background-color: #ef9a9a;
-}
-.chore-card.done {
-  background-color: #a5d6a7;
-}
-.chore-image {
-  width: 100%;
-  max-height: 150px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-top: 0.5em;
 }
 .add-btn {
   position: fixed;
