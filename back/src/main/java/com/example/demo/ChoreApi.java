@@ -30,12 +30,12 @@ public class ChoreApi {
     }
 
     @PostMapping(path = "/")
-    public ChoreEntity createChore(@RequestBody ChoreDto newChore) {
+    public ChoreEntity createChore(@RequestBody EditChoreDto newChore) {
         return repository.save(ChoreEntity.from(newChore));
     }
 
     @PutMapping(path = "/{id}")
-    public ChoreEntity updateChore(@PathVariable Long id, @RequestBody ChoreDto update) {
+    public ChoreEntity updateChore(@PathVariable Long id, @RequestBody EditChoreDto update) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
         if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done()) && update.repeatsInDays() != null && update.repeatsInDays() > 0) {
             createRecurring(update);
@@ -44,7 +44,7 @@ public class ChoreApi {
         return repository.save(chore);
     }
 
-    private void createRecurring(ChoreDto choreDto) {
+    private void createRecurring(EditChoreDto choreDto) {
         Instant plannedDate = choreDto.date().toInstant().truncatedTo(ChronoUnit.DAYS);
         Instant now = new Date().toInstant().truncatedTo(ChronoUnit.DAYS);
 
@@ -53,7 +53,7 @@ public class ChoreApi {
             
         }
 
-        ChoreDto nextRecurrence = choreDto.recurrence(Date.from(plannedDate));
+        EditChoreDto nextRecurrence = choreDto.recurrence(Date.from(plannedDate));
         repository.save(ChoreEntity.from(nextRecurrence));
     }
 }

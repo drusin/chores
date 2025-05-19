@@ -5,7 +5,7 @@
     </header>
 
     <main class="lanes">
-      <div class="lane" v-for="person in ['Mom', 'Dad', 'Son']" :key="person">
+      <div class="lane" v-for="person in ['Alex', 'Dawid', 'Vincent']" :key="person">
         <div class="lane-header">
           <img :src="getProfilePic(person)" alt="Profile" class="profile-pic" />
           <h2>{{ person }}</h2>
@@ -29,9 +29,9 @@
         <h3>Add New Chore</h3>
         <input v-model="newChore.title" placeholder="Title" />
         <select v-model="newChore.assigned">
-          <option>Dad</option>
-          <option>Mom</option>
-          <option>Son</option>
+          <option>Dawid</option>
+          <option>Alex</option>
+          <option>Vincent</option>
           <option>All</option>
         </select>
         <input type="date" v-model="newChore.due" />
@@ -45,70 +45,60 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
 import ChoreCard from './ChoreCard.vue';
+import { setup, state as plainState, choresFor } from './state';
 
-export default {
-  components: {
-    ChoreCard
-  },
-  setup() {
-    const showForm = ref(false);
+const showForm = ref(false);
+const state = ref(plainState);
 
-    const chores = ref([
-      { title: 'Take out trash', assigned: 'Dad', due: '2025-05-17', status: 'Planned', image: '' },
-      { title: 'Clean kitchen', assigned: 'Mom', due: '2025-05-16', status: 'Planned', image: '' },
-      { title: 'Do homework', assigned: 'Son', due: '2025-05-15', status: 'Done', image: '' },
-    ]);
+// const chores = ref([
+  //   { title: 'Take out trash', assigned: 'Dad', due: '2025-05-17', status: 'Planned', image: '' },
+  //   { title: 'Clean kitchen', assigned: 'Mom', due: '2025-05-16', status: 'Planned', image: '' },
+  //   { title: 'Do homework', assigned: 'Son', due: '2025-05-15', status: 'Done', image: '' },
+  // ]);
+const chores = state.value.chores
+// console.log(chores.value);
+// watch(chores, async (_new, _old) => console.log(`chores changed from ${_new} to ${_old}`));
+// setup().then(_val => console.log(chores.value));
 
-    const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' });
+const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' });
 
-    const todayStr = new Date().toISOString().split('T')[0];
+const todayStr = new Date().toISOString().split('T')[0];
 
-    const personChores = (person) => {
-      return chores.value.filter(chore => chore.assigned === person);
-    };
+const personChores = choresFor;
 
-    const getChoreIndex = (target) => {
-      return chores.value.findIndex(c => c.title === target.title && c.assigned === target.assigned && c.due === target.due && c.status === target.status);
-    };
+// const personChores = (person) => {
+//   return chores.value.filter(chore => chore.assigned === person);
+// };
 
-    function cycleStatus(idx) {
-      const order = ['Planned', 'Done'];
-      const chore = chores.value[idx];
-      const next = order[(order.indexOf(chore.status) + 1) % order.length];
-      chore.status = next;
-    }
-
-    function addChore() {
-      chores.value.push({ ...newChore.value });
-      newChore.value = { title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' };
-      showForm.value = false;
-    }
-
-    function getProfilePic(person) {
-      const map = {
-        Dad: 'https://picsum.photos/seed/dad/40/40',
-        Mom: 'https://picsum.photos/seed/mom/40/40',
-        Son: 'https://picsum.photos/seed/son/40/40'
-      };
-      return map[person];
-    }
-
-    return {
-      chores,
-      personChores,
-      getChoreIndex,
-      cycleStatus,
-      showForm,
-      newChore,
-      addChore,
-      getProfilePic,
-      todayStr
-    };
-  },
+const getChoreIndex = (target) => {
+  return chores.value.findIndex(c => c.title === target.title && c.assigned === target.assigned && c.due === target.due && c.status === target.status);
 };
+
+function cycleStatus(idx) {
+  const order = ['Planned', 'Done'];
+  const chore = chores.value[idx];
+  const next = order[(order.indexOf(chore.status) + 1) % order.length];
+  chore.status = next;
+}
+
+function addChore() {
+  chores.value.push({ ...newChore.value });
+  newChore.value = { title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' };
+  showForm.value = false;
+}
+
+function getProfilePic(person) {
+  const map = {
+    Dawid: 'https://picsum.photos/seed/dad/40/40',
+    Alex: 'https://picsum.photos/seed/mom/40/40',
+    Vincent: 'https://picsum.photos/seed/son/40/40'
+  };
+  return map[person];
+}
+
 </script>
 
 <style>

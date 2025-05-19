@@ -21,13 +21,13 @@ public class ChoreEntity {
     Integer repeatsInDays;
     Boolean done;
    
-    public static ChoreEntity from(ChoreDto chore) {
+    public static ChoreEntity from(EditChoreDto chore) {
         ChoreEntity entity = new ChoreEntity();
         entity.update(chore);
         return entity;
     }
 
-    public void update(ChoreDto update) {
+    public void update(EditChoreDto update) {
         assignedTo = update.assignedTo();
         title = update.title();
         date = update.date();
