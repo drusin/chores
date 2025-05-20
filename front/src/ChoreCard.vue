@@ -1,12 +1,12 @@
 <template>
   <li
     class="chore-card"
-    :class="statusClass()"
+    :class="chore.status"
     @click="$emit('cycle-status')"
   >
     <div class="chore-content">
       <strong>{{ chore.title }}</strong>
-      <span class="due-date">Due: {{ chore.due }}</span>
+      <span class="due-date">Due: {{ chore.date }}</span>
       <img
         v-if="chore.image"
         :src="chore.image"
@@ -18,14 +18,15 @@
 </template>
 
 <script setup lang="ts">
-import type Chore from './types/chore';
+import type { Chore } from './state';
+
 
 const { chore, todayStr } = defineProps<{
     chore: Chore,
     todayStr: String
 }>();
 const statusClass = () => {
-      if (chore.status === 'Done') return 'done';
+      if (chore.done) return 'done';
       if (chore.due === todayStr) return 'due-today';
       if (chore.due < todayStr) return 'overdue';
       return 'planned';
@@ -43,7 +44,7 @@ const statusClass = () => {
 .chore-card.planned {
   background: #e0e0e0;
 }
-.chore-card.due-today {
+.chore-card.due {
   background: #fff59d;
 }
 .chore-card.overdue {

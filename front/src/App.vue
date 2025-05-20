@@ -48,20 +48,21 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import ChoreCard from './ChoreCard.vue';
-import { setup, state as plainState, choresFor } from './state';
+import { state, setup, choresFor } from './state';
 
 const showForm = ref(false);
-const state = ref(plainState);
+// const state = ref(plainState);
+const chores = ref(state.value.chores);
 
 // const chores = ref([
   //   { title: 'Take out trash', assigned: 'Dad', due: '2025-05-17', status: 'Planned', image: '' },
   //   { title: 'Clean kitchen', assigned: 'Mom', due: '2025-05-16', status: 'Planned', image: '' },
   //   { title: 'Do homework', assigned: 'Son', due: '2025-05-15', status: 'Done', image: '' },
   // ]);
-const chores = state.value.chores
 // console.log(chores.value);
 // watch(chores, async (_new, _old) => console.log(`chores changed from ${_new} to ${_old}`));
 // setup().then(_val => console.log(chores.value));
+setup();
 
 const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' });
 
@@ -70,7 +71,7 @@ const todayStr = new Date().toISOString().split('T')[0];
 const personChores = choresFor;
 
 // const personChores = (person) => {
-//   return chores.value.filter(chore => chore.assigned === person);
+//   return state.value.chores.filter(chore => chore.assignedTo === person);
 // };
 
 const getChoreIndex = (target) => {

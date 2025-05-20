@@ -1,4 +1,12 @@
 import { getChores } from './gateway.ts';
+import { ref, type Ref } from 'vue';
+
+export const ChoreStatus = {
+    PLANNED: 'planned',
+    DUE: 'due',
+    OVERDUE: 'overdue',
+    DONE: 'done'
+}
 
 export type Chore = {
     id: number,
@@ -6,7 +14,8 @@ export type Chore = {
     title: string,
     date: Date,
     repeatsInDays: number,
-    done: boolean
+    done: boolean,
+    status: string
 }
 
 export type State = {
@@ -14,10 +23,10 @@ export type State = {
     users: string[]
 }
 
-export const state: State = {
+export const state: Ref<State> = ref({ 
     chores: [],
     users: [ 'Alex', 'Dawid', 'Vincent' ]
-};
+ })
 
 export async function setup() {
     const choreDtos = await getChores();
@@ -27,12 +36,28 @@ export async function setup() {
         title: dto.title,
         date: dto.date,
         repeatsInDays: dto.repeatsInDays,
-        done: dto.done
+        done: dto.done,
+        get status() { return stateGetter(this); }
     }));
-    state.chores.length = 0;
-    state.chores.push(...chores);
+    state.value.chores.length = 0;
+    state.value.chores.push(...chores);
+}
+
+function stateGetter({ done, date }: { done: boolean, date: Date} ) {
+    if (done) {
+        return ChoreStatus.DONE;
+    }
+    const dueString = date.toDateString();
+    const now = new Date().toDateString();
+    if (dueString === now) {
+        return ChoreStatus.DUE;
+    }
+    if (dueString > now) {
+        return ChoreStatus.OVERDUE;
+    }
+    return ChoreStatus.PLANNED;
 }
 
 export function choresFor(name: string) {
-    return state.chores.filter(chore => chore.assignedTo === name);
+    return state.value.chores.filter(chore => chore.assignedTo === name);
 }
