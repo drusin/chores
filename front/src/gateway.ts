@@ -4,7 +4,7 @@ type ChoreDto = {
     id: number,
     assignedTo: string,
     title: string,
-    date: Date,
+    date: string,
     repeatsInDays: number,
     done: boolean
 }

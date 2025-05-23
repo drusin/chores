@@ -6,7 +6,7 @@ export const ChoreStatus = {
     DUE: 'due',
     OVERDUE: 'overdue',
     DONE: 'done'
-}
+};
 
 export type Chore = {
     id: number,
@@ -16,17 +16,17 @@ export type Chore = {
     repeatsInDays: number,
     done: boolean,
     status: string
-}
+};
 
 export type State = {
     chores: Chore[],
     users: string[]
-}
+};
 
 export const state: Ref<State> = ref({ 
     chores: [],
     users: [ 'Alex', 'Dawid', 'Vincent' ]
- })
+});
 
 export async function setup() {
     const choreDtos = await getChores();
@@ -34,13 +34,12 @@ export async function setup() {
         id: dto.id,
         assignedTo: dto.assignedTo,
         title: dto.title,
-        date: dto.date,
+        date: new Date(dto.date),
         repeatsInDays: dto.repeatsInDays,
         done: dto.done,
         get status() { return stateGetter(this); }
     }));
-    state.value.chores.length = 0;
-    state.value.chores.push(...chores);
+    state.value.chores = chores;
 }
 
 function stateGetter({ done, date }: { done: boolean, date: Date} ) {

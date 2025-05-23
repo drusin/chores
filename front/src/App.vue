@@ -12,7 +12,7 @@
         </div>
         <ul class="chore-list">
           <ChoreCard
-            v-for="(chore, idx) in personChores(person)"
+            v-for="(chore, idx) in choresFor(person)"
             :key="idx"
             :chore="chore"
             :todayStr="todayStr"
@@ -51,28 +51,10 @@ import ChoreCard from './ChoreCard.vue';
 import { state, setup, choresFor } from './state';
 
 const showForm = ref(false);
-// const state = ref(plainState);
 const chores = ref(state.value.chores);
-
-// const chores = ref([
-  //   { title: 'Take out trash', assigned: 'Dad', due: '2025-05-17', status: 'Planned', image: '' },
-  //   { title: 'Clean kitchen', assigned: 'Mom', due: '2025-05-16', status: 'Planned', image: '' },
-  //   { title: 'Do homework', assigned: 'Son', due: '2025-05-15', status: 'Done', image: '' },
-  // ]);
-// console.log(chores.value);
-// watch(chores, async (_new, _old) => console.log(`chores changed from ${_new} to ${_old}`));
-// setup().then(_val => console.log(chores.value));
 setup();
-
 const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' });
-
 const todayStr = new Date().toISOString().split('T')[0];
-
-const personChores = choresFor;
-
-// const personChores = (person) => {
-//   return state.value.chores.filter(chore => chore.assignedTo === person);
-// };
 
 const getChoreIndex = (target) => {
   return chores.value.findIndex(c => c.title === target.title && c.assigned === target.assigned && c.due === target.due && c.status === target.status);

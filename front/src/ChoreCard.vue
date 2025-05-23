@@ -19,18 +19,10 @@
 
 <script setup lang="ts">
 import type { Chore } from './state';
-
-
-const { chore, todayStr } = defineProps<{
+const { chore } = defineProps<{
     chore: Chore,
-    todayStr: String
 }>();
-const statusClass = () => {
-      if (chore.done) return 'done';
-      if (chore.due === todayStr) return 'due-today';
-      if (chore.due < todayStr) return 'overdue';
-      return 'planned';
-    }
+
 </script>
 
 <style scoped>
