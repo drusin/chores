@@ -1,4 +1,4 @@
-import { getChores } from './gateway.ts';
+import { getChores, createChore as createChoreCall, type EditChoreDto, type ChoreDto } from './gateway.ts';
 import { ref, type Ref } from 'vue';
 
 export const ChoreStatus = {
@@ -30,28 +30,40 @@ export const state: Ref<State> = ref({
 
 export async function setup() {
     const choreDtos = await getChores();
-    const chores = choreDtos.map(dto => ({ 
+    const chores = choreDtos.map(fromDto);
+    state.value.chores = chores;
+    sortChores();
+}
+
+function fromDto(dto: ChoreDto): Chore {
+    const date = normalizeDate(new Date(dto.date));
+    const done = dto.done;
+    return { 
         id: dto.id,
         assignedTo: dto.assignedTo,
         title: dto.title,
-        date: new Date(dto.date),
+        date: date,
         repeatsInDays: dto.repeatsInDays,
-        done: dto.done,
-        get status() { return stateGetter(this); }
-    }));
-    state.value.chores = chores;
+        done: done,
+        get status() { return stateGetter({ done, date }); }
+    };
+}
+
+function normalizeDate(date: Date) {
+    const returnVal = new Date(date);
+    returnVal.setHours(0, 0, 0, 0);
+    return returnVal;
 }
 
 function stateGetter({ done, date }: { done: boolean, date: Date} ) {
     if (done) {
         return ChoreStatus.DONE;
     }
-    const dueString = date.toDateString();
-    const now = new Date().toDateString();
-    if (dueString === now) {
+    const now = normalizeDate(new Date());
+    if (date.getTime() === now.getTime()) {
         return ChoreStatus.DUE;
     }
-    if (dueString > now) {
+    if (now > date) {
         return ChoreStatus.OVERDUE;
     }
     return ChoreStatus.PLANNED;
@@ -59,4 +71,15 @@ function stateGetter({ done, date }: { done: boolean, date: Date} ) {
 
 export function choresFor(name: string) {
     return state.value.chores.filter(chore => chore.assignedTo === name);
+}
+
+export async function createChore(newChore: EditChoreDto) {
+    const dto = await createChoreCall(newChore);
+    const chore = fromDto(dto);
+    state.value.chores.push(chore);
+    sortChores();
+}
+
+function sortChores() {
+    state.value.chores.sort((left, right) => left.date.getTime() - right.date.getTime());
 }

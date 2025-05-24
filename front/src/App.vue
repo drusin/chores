@@ -5,7 +5,7 @@
     </header>
 
     <main class="lanes">
-      <div class="lane" v-for="person in ['Alex', 'Dawid', 'Vincent']" :key="person">
+      <div class="lane" v-for="person in state.users" :key="person">
         <div class="lane-header">
           <img :src="getProfilePic(person)" alt="Profile" class="profile-pic" />
           <h2>{{ person }}</h2>
@@ -15,16 +15,16 @@
             v-for="(chore, idx) in choresFor(person)"
             :key="idx"
             :chore="chore"
-            :todayStr="todayStr"
-            @cycle-status="cycleStatus(getChoreIndex(chore))"
           />
         </ul>
       </div>
     </main>
 
-    <button class="add-btn" @click="showForm = true">+</button>
+    <button class="add-btn" @click="newChoreModal.showForm = true">+</button>
 
-    <div class="modal" v-if="showForm">
+    
+    <NewChoreModal ref="newChoreModal" />
+    <!-- <div class="modal" v-if="showForm">
       <div class="modal-content">
         <h3>Add New Chore</h3>
         <input v-model="newChore.title" placeholder="Title" />
@@ -41,31 +41,22 @@
           <button @click="showForm = false">Cancel</button>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import ChoreCard from './ChoreCard.vue';
+import NewChoreModal from './NewChoreModal.vue';
 import { state, setup, choresFor } from './state';
+
+const newChoreModal = ref(null);
 
 const showForm = ref(false);
 const chores = ref(state.value.chores);
 setup();
 const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' });
-const todayStr = new Date().toISOString().split('T')[0];
-
-const getChoreIndex = (target) => {
-  return chores.value.findIndex(c => c.title === target.title && c.assigned === target.assigned && c.due === target.due && c.status === target.status);
-};
-
-function cycleStatus(idx) {
-  const order = ['Planned', 'Done'];
-  const chore = chores.value[idx];
-  const next = order[(order.indexOf(chore.status) + 1) % order.length];
-  chore.status = next;
-}
 
 function addChore() {
   chores.value.push({ ...newChore.value });
@@ -73,7 +64,7 @@ function addChore() {
   showForm.value = false;
 }
 
-function getProfilePic(person) {
+function getProfilePic(person: string): string {
   const map = {
     Dawid: 'https://picsum.photos/seed/dad/40/40',
     Alex: 'https://picsum.photos/seed/mom/40/40',
