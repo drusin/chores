@@ -24,10 +24,21 @@ import { ref } from 'vue';
 import { type EditChoreDto } from './gateway.ts';
 
 const showForm = ref(false);
+let choreModel = newModel();
 
 defineExpose({
-  showForm
+  show,
+  hide
 });
+
+function show() {
+  choreModel = newModel();
+  showForm.value = true;
+}
+
+function hide() {
+  showForm.value = false;
+}
 
 function newModel(): EditChoreDto {
   return {
@@ -36,10 +47,8 @@ function newModel(): EditChoreDto {
     date: '',
     repeatsInDays: 0,
     done: false
-};
+  };
 }
-
-const choreModel = newModel();
 
 </script>
 

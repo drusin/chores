@@ -28,7 +28,7 @@ export const state: Ref<State> = ref({
     users: [ 'Alex', 'Dawid', 'Vincent' ]
 });
 
-export async function setup() {
+export async function setupState() {
     const choreDtos = await getChores();
     const chores = choreDtos.map(fromDto);
     state.value.chores = chores;
@@ -45,7 +45,7 @@ function fromDto(dto: ChoreDto): Chore {
         date: date,
         repeatsInDays: dto.repeatsInDays,
         done: done,
-        get status() { return stateGetter({ done, date }); }
+        get status() { return statusGetter({ done, date }); }
     };
 }
 
@@ -55,7 +55,7 @@ function normalizeDate(date: Date) {
     return returnVal;
 }
 
-function stateGetter({ done, date }: { done: boolean, date: Date} ) {
+function statusGetter({ done, date }: { done: boolean, date: Date} ) {
     if (done) {
         return ChoreStatus.DONE;
     }

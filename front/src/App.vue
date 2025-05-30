@@ -20,10 +20,10 @@
       </div>
     </main>
 
-    <button class="add-btn" @click="newChoreModal.showForm = true">+</button>
-
+    <button class="add-btn" @click="newChoreModal?.show()">+</button>
     
-    <NewChoreModal ref="newChoreModal" />
+    
+    <NewChoreModal ref="new-chore-modal" />
     <!-- <div class="modal" v-if="showForm">
       <div class="modal-content">
         <h3>Add New Chore</h3>
@@ -46,23 +46,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import NewChoreModal from './NewChoreModal.vue';
-import { state, setup, choresFor } from './state';
+import { state, setupState, choresFor } from './state';
 
-const newChoreModal = ref(null);
+const newChoreModal = useTemplateRef('new-chore-modal');
+setupState();
 
-const showForm = ref(false);
-const chores = ref(state.value.chores);
-setup();
-const newChore = ref({ title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' });
-
-function addChore() {
-  chores.value.push({ ...newChore.value });
-  newChore.value = { title: '', assigned: 'Dad', due: '', status: 'Planned', image: '' };
-  showForm.value = false;
-}
 
 function getProfilePic(person: string): string {
   const map = {
