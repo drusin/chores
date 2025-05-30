@@ -2,26 +2,39 @@
   <li
     class="chore-card"
     :class="chore.status"
-    @click="$emit('cycle-status')"
   >
-    <div class="chore-content">
+    <div class="chore-content" @click="$emit('toggle')">
       <strong>{{ chore.title }}</strong>
-      <span class="due-date">Due: {{ chore.date }}</span>
+      <span class="due-date">{{ displayDate() }}</span>
       <img
         v-if="chore.image"
         :src="chore.image"
         alt="Chore"
         class="chore-image"
       />
+      <button @click.stop>📑</button>
+      <button @click.stop>🚮</button>
     </div>
   </li>
 </template>
 
 <script setup lang="ts">
 import type { Chore } from './types';
+import { normalizeDate } from './helpers';
+
 const { chore } = defineProps<{
     chore: Chore,
 }>();
+
+defineEmits<{
+  toggle: [void],
+}>();
+
+function displayDate() {
+  const dateDifference = new Date(chore.date).getTime() - normalizeDate(new Date).getTime();
+  const format = new Intl.RelativeTimeFormat('de-de', { numeric: 'auto' });
+  return format.format(dateDifference / (1000 * 60 * 60 * 24), 'day');
+}
 
 </script>
 

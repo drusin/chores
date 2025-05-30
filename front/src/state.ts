@@ -1,5 +1,6 @@
 import { ref, type Ref } from 'vue';
 import type { EditChoreDto, ChoreDto, Chore, State, Gateway, StateApi } from './types';
+import { normalizeDate } from './helpers';
 
 export const ChoreStatus = {
     PLANNED: 'planned',
@@ -8,7 +9,7 @@ export const ChoreStatus = {
     DONE: 'done'
 };
 
-async function setupState(state: Ref<State>, gateway: Gateway) {
+async function refreshChores(state: Ref<State>, gateway: Gateway) {
     const choreDtos = await gateway.getChores();
     const chores = choreDtos.map(fromDto);
     state.value.chores = chores;
@@ -29,11 +30,6 @@ function fromDto(dto: ChoreDto): Chore {
     };
 }
 
-function normalizeDate(date: Date) {
-    const returnVal = new Date(date);
-    returnVal.setHours(0, 0, 0, 0);
-    return returnVal;
-}
 
 function statusGetter({ done, date }: { done: boolean, date: Date} ) {
     if (done) {
@@ -54,14 +50,23 @@ function choresFor(state: Ref<State>, name: string) {
 }
 
 async function createChore(state: Ref<State>, gateway: Gateway, newChore: EditChoreDto) {
-    const dto = await gateway.createChore(newChore);
-    const chore = fromDto(dto);
-    state.value.chores.push(chore);
-    sortChores(state);
+    await gateway.createChore(newChore);
+    await refreshChores(state, gateway);
 }
 
 function sortChores(state: Ref<State>) {
     state.value.chores.sort((left, right) => left.date.getTime() - right.date.getTime());
+    state.value.chores.sort((left, right) => (left.done ? 1 : -1) - (right.done ? 1 : -1));
+}
+
+async function toggleChore(state: Ref<State>, gateway: Gateway, id: number) {
+    const chore = state.value.chores.find(c => c.id === id);
+    if (!chore) {
+        return;
+    }
+    const dto: EditChoreDto = Object.assign({}, chore, { done: !chore.done, date: chore.date.toISOString() });
+    await gateway.editChore(chore.id, dto);
+    await refreshChores(state, gateway);
 }
 
 export default function (gateway: Gateway): StateApi {
@@ -69,11 +74,12 @@ export default function (gateway: Gateway): StateApi {
         chores: [],
         users: [ 'Alex', 'Dawid', 'Vincent' ]
     });
-    setupState(state, gateway);
+    refreshChores(state, gateway);
     return {
         get chores() { return state.value.chores; },
         get users() { return state.value.users; },
         choresFor: (name: string) => choresFor(state, name),
-        createChore: (newChore: EditChoreDto) => createChore(state, gateway, newChore)
+        createChore: (newChore: EditChoreDto) => createChore(state, gateway, newChore),
+        toggleChore: (id: number) => toggleChore(state, gateway, id),
     }
 }

@@ -24,7 +24,8 @@ import { ref } from 'vue';
 import type { EditChoreDto } from './types';
 
 const showForm = ref(false);
-let choreModel = newModel();
+let choreModel: EditChoreDto;
+let currentId: number | null = null;
 
 defineExpose({
   show,
@@ -32,12 +33,13 @@ defineExpose({
 });
 
 const emit = defineEmits<{
-  create: [EditChoreDto];
+  submit: [EditChoreDto, number | null];
 }>();
 
 
-function show() {
-  choreModel = newModel();
+function show(model: EditChoreDto, id: number | null = null) {
+  currentId = id;
+  choreModel = model;
   showForm.value = true;
 }
 
@@ -46,18 +48,8 @@ function hide() {
 }
 
 function addChore() {
-  emit('create', choreModel);
+  emit('submit', choreModel, currentId);
   hide();
-}
-
-function newModel(): EditChoreDto {
-  return {
-    assignedTo: '',
-    title: '',
-    date: '',
-    repeatsInDays: 0,
-    done: false
-  };
 }
 
 </script>

@@ -19,5 +19,18 @@ export default {
         });
         const json = await request.json();
         return json as ChoreDto;
-    }
+    },
+
+    editChore: async(id: number, chore: EditChoreDto) => {
+        const request = await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(chore)
+        });
+        const json = await request.json();
+        return json as ChoreDto;
+    },
+
 } as Gateway;

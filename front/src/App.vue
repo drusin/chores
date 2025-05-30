@@ -15,31 +15,50 @@
             v-for="(chore, idx) in state.choresFor(person)"
             :key="idx"
             :chore="chore"
+            @toggle="toggleChore(chore.id)"
           />
         </ul>
       </div>
     </main>
 
-    <button class="add-btn" @click="newChoreModal?.show()">+</button>
+    <button class="add-btn" @click="openNewChoreModal">+</button>
     
-    <NewChoreModal ref="new-chore-modal" @create="createChore" />
+    <NewChoreModal ref="edit-chore-modal" @submit="modalSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
-import NewChoreModal from './NewChoreModal.vue';
+import NewChoreModal from './EditChoreModal.vue';
 import type { EditChoreDto, StateApi } from './types';
 
-const props = defineProps<{
+const { state } = defineProps<{
   state: StateApi;
 }>();
 
-const newChoreModal = useTemplateRef('new-chore-modal');
+const editChoreModal = useTemplateRef('edit-chore-modal');
 
-function createChore(chore: EditChoreDto): void {
-  props.state.createChore(chore);
+function openNewChoreModal() {
+  editChoreModal.value?.show(
+    {
+      assignedTo: '',
+      title: '',
+      date: '',
+      repeatsInDays: 0,
+      done: false
+    } as EditChoreDto
+  );
+}
+
+function modalSubmit(chore: EditChoreDto, id: number | null): void {
+  if (id === null) {
+    state.createChore(chore);
+  }
+}
+
+function toggleChore(id: number) {
+  state.toggleChore(id);
 }
 
 function getProfilePic(person: string): string {
