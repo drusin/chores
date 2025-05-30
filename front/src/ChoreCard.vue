@@ -12,7 +12,7 @@
         alt="Chore"
         class="chore-image"
       />
-      <button @click.stop>📑</button>
+      <button @click.stop="$emit('edit')">📑</button>
       <button @click.stop="$emit('delete')">🚮</button>
     </div>
   </li>

@@ -16,6 +16,7 @@
             :key="idx"
             :chore="chore"
             @toggle="toggleChore(chore.id)"
+            @edit="editChore(chore.id)"
             @delete="deleteChore(chore.id)"
           />
         </ul>
@@ -24,7 +25,7 @@
 
     <button class="add-btn" @click="openNewChoreModal">+</button>
     
-    <NewChoreModal ref="edit-chore-modal" @submit="modalSubmit" />
+    <NewChoreModal ref="edit-chore-modal" :users="state.users" @submit="modalSubmit" />
   </div>
 </template>
 
@@ -33,6 +34,7 @@ import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import NewChoreModal from './EditChoreModal.vue';
 import type { EditChoreDto, StateApi } from './types';
+import { choreToEditChoreDto } from './helpers';
 
 const { state } = defineProps<{
   state: StateApi;
@@ -55,7 +57,9 @@ function openNewChoreModal() {
 function modalSubmit(chore: EditChoreDto, id: number | null): void {
   if (id === null) {
     state.createChore(chore);
+    return
   }
+  state.editChore(id, chore);
 }
 
 function toggleChore(id: number) {
@@ -66,6 +70,15 @@ function deleteChore(id: number) {
   if (confirm('Bist du sicher, dass du diese Aufgabe löschen möchtest?')) {
     state.deleteChore(id);
   }
+}
+
+function editChore(id: number) {
+  const chore = state.chores.find(chore => chore.id === id);
+  if (!chore) {
+    console.error('Chore not found:', id);
+    return;
+  }
+  editChoreModal.value?.show(choreToEditChoreDto(chore), id);
 }
 
 function getProfilePic(person: string): string {

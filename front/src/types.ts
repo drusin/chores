@@ -38,10 +38,11 @@ export type Gateway = {
 };
 
 export type StateApi = {
-    readonly chores: Chore[];
-    readonly users: string[];
+    chores: Chore[];
+    users: string[];
     choresFor: (name: string) => Chore[];
     createChore: (newChore: EditChoreDto) => Promise<void>;
     toggleChore: (id: number) => Promise<void>;
     deleteChore: (id: number) => Promise<void>;
+    editChore: (id: number, chore: EditChoreDto) => Promise<void>;
 };

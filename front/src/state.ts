@@ -9,11 +9,16 @@ export const ChoreStatus = {
     DONE: 'done'
 };
 
-async function refreshChores(state: Ref<State>, gateway: Gateway) {
-    const choreDtos = await gateway.getChores();
+type Internals = {
+    state: Ref<State>,
+    gateway: Gateway
+};
+
+async function refreshChores(internals: Internals) {
+    const choreDtos = await internals.gateway.getChores();
     const chores = choreDtos.map(fromDto);
-    state.value.chores = chores;
-    sortChores(state);
+    internals.state.value.chores = chores;
+    sortChores(internals);
 }
 
 function fromDto(dto: ChoreDto): Chore {
@@ -30,7 +35,6 @@ function fromDto(dto: ChoreDto): Chore {
     };
 }
 
-
 function statusGetter({ done, date }: { done: boolean, date: Date} ) {
     if (done) {
         return ChoreStatus.DONE;
@@ -45,33 +49,38 @@ function statusGetter({ done, date }: { done: boolean, date: Date} ) {
     return ChoreStatus.PLANNED;
 }
 
-function choresFor(state: Ref<State>, name: string) {
-    return state.value.chores.filter(chore => chore.assignedTo === name);
+function choresFor(internals: Internals, name: string) {
+    return internals.state.value.chores.filter(chore => chore.assignedTo === name);
 }
 
-async function createChore(state: Ref<State>, gateway: Gateway, newChore: EditChoreDto) {
-    await gateway.createChore(newChore);
-    await refreshChores(state, gateway);
+async function createChore(internals: Internals, newChore: EditChoreDto) {
+    await internals.gateway.createChore(newChore);
+    await refreshChores(internals);
 }
 
-function sortChores(state: Ref<State>) {
-    state.value.chores.sort((left, right) => left.date.getTime() - right.date.getTime());
-    state.value.chores.sort((left, right) => (left.done ? 1 : -1) - (right.done ? 1 : -1));
+function sortChores(internals: Internals) {
+    internals.state.value.chores.sort((left, right) => left.date.getTime() - right.date.getTime());
+    internals.state.value.chores.sort((left, right) => (left.done ? 1 : -1) - (right.done ? 1 : -1));
 }
 
-async function toggleChore(state: Ref<State>, gateway: Gateway, id: number) {
-    const chore = state.value.chores.find(c => c.id === id);
+async function toggleChore(internals: Internals, id: number) {
+    const chore = internals.state.value.chores.find(c => c.id === id);
     if (!chore) {
         return;
     }
     const dto: EditChoreDto = Object.assign({}, chore, { done: !chore.done, date: chore.date.toISOString() });
-    await gateway.editChore(chore.id, dto);
-    await refreshChores(state, gateway);
+    await internals.gateway.editChore(chore.id, dto);
+    await refreshChores(internals);
 }
 
-async function deleteChore(state: Ref<State>, gateway: Gateway, id: number) {
-    await gateway.deleteChore(id);
-    await refreshChores(state, gateway);
+async function deleteChore(internals: Internals, id: number) {
+    await internals.gateway.deleteChore(id);
+    await refreshChores(internals);
+}
+
+async function editChore(internals: Internals, id: number, chore: EditChoreDto) {
+    await internals.gateway.editChore(id, chore);
+    await refreshChores(internals);
 }
 
 export default function (gateway: Gateway): StateApi {
@@ -79,13 +88,15 @@ export default function (gateway: Gateway): StateApi {
         chores: [],
         users: [ 'Alex', 'Dawid', 'Vincent' ]
     });
-    refreshChores(state, gateway);
+    const internals: Internals = { state, gateway };
+    refreshChores(internals);
     return {
         get chores() { return state.value.chores; },
         get users() { return state.value.users; },
-        choresFor: (name: string) => choresFor(state, name),
-        createChore: (newChore: EditChoreDto) => createChore(state, gateway, newChore),
-        toggleChore: (id: number) => toggleChore(state, gateway, id),
-        deleteChore: (id: number) => deleteChore(state, gateway, id)
+        choresFor: (name: string) => choresFor(internals, name),
+        createChore: (newChore: EditChoreDto) => createChore(internals, newChore),
+        toggleChore: (id: number) => toggleChore(internals, id),
+        deleteChore: (id: number) => deleteChore(internals, id),
+        editChore: (id: number, chore: EditChoreDto) => editChore(internals, id, chore),
     }
 }

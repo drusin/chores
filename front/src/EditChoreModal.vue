@@ -4,15 +4,12 @@
       <h3>Add New Chore</h3>
       <input v-model="choreModel.title" placeholder="Title" />
       <select v-model="choreModel.assignedTo">
-        <option>Dawid</option>
-        <option>Alex</option>
-        <option>Vincent</option>
-        <option>All</option>
+        <option v-for="user in users" :key="user">{{ user }}</option>
       </select>
-      <input type="date" v-model="choreModel.date" />
+      <input type="date" v-model="dateModel" />
       <input v-model="choreModel.image" placeholder="Image URL (optional)" />
       <div class="modal-actions">
-        <button @click="addChore">Save</button>
+        <button @click="submit()">Save</button>
         <button @click="hide()">Cancel</button>
       </div>
     </div>
@@ -20,12 +17,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type { EditChoreDto } from './types';
 
 const showForm = ref(false);
 let choreModel: EditChoreDto;
 let currentId: number | null = null;
+const dateModel = computed({
+  get: () => {
+    const date = new Date(choreModel.date);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  },
+  set: (value) => {
+    choreModel.date = value;
+  }
+});
+
+defineProps<{
+  users: string[]
+}>();
 
 defineExpose({
   show,
@@ -47,7 +57,7 @@ function hide() {
   showForm.value = false;
 }
 
-function addChore() {
+function submit() {
   emit('submit', choreModel, currentId);
   hide();
 }
