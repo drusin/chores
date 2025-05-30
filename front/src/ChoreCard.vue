@@ -6,12 +6,6 @@
     <div class="chore-content" @click="$emit('toggle')">
       <strong>{{ chore.title }}</strong>
       <span class="due-date">{{ displayDate() }}</span>
-      <img
-        v-if="chore.image"
-        :src="chore.image"
-        alt="Chore"
-        class="chore-image"
-      />
       <button @click.stop="$emit('edit')">📑</button>
       <button @click.stop="$emit('delete')">🚮</button>
     </div>

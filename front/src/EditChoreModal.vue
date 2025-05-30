@@ -7,7 +7,6 @@
         <option v-for="user in users" :key="user">{{ user }}</option>
       </select>
       <input type="date" v-model="dateModel" />
-      <input v-model="choreModel.image" placeholder="Image URL (optional)" />
       <div class="modal-actions">
         <button @click="submit()">Save</button>
         <button @click="hide()">Cancel</button>

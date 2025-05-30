@@ -59,7 +59,7 @@ function modalSubmit(chore: EditChoreDto, id: number | null): void {
     state.createChore(chore);
     return
   }
-  state.editChore(id, chore);
+  state.editChore
 }
 
 function toggleChore(id: number) {
@@ -82,12 +82,13 @@ function editChore(id: number) {
 }
 
 function getProfilePic(person: string): string {
-  const map = {
-    Dawid: 'https://picsum.photos/seed/dad/40/40',
-    Alex: 'https://picsum.photos/seed/mom/40/40',
-    Vincent: 'https://picsum.photos/seed/son/40/40'
-  };
-  return map[person];
+  const map = new Map<string, string>([
+    ['Dawid', 'https://picsum.photos/seed/dad/40/40'],
+    ['Alex', 'https://picsum.photos/seed/mom/40/40'],
+    ['Vincent', 'https://picsum.photos/seed/son/40/40']
+  ]);
+
+  return map.get(person) ||'';
 }
 
 </script>
