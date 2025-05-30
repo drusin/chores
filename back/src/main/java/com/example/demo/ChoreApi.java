@@ -44,7 +44,7 @@ public class ChoreApi {
     @PutMapping(path = "/{id}")
     public ChoreEntity updateChore(@PathVariable Long id, @RequestBody EditChoreDto update) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
-        if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done()) && update.repeatsInDays() != null && update.repeatsInDays() > 0) {
+        if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done()) && update.repeatsEveryWeeks() != null && update.repeatsEveryWeeks() > 0) {
             createRecurring(update);
         }
         chore.update(update);

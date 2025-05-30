@@ -18,7 +18,14 @@ public class ChoreEntity {
     String assignedTo;
     String title;
     Date date;
-    Integer repeatsInDays;
+    Integer repeatsEveryWeeks;
+    Boolean repeatsOnMonday;
+    Boolean repeatsOnTuesday;
+    Boolean repeatsOnWednesday;
+    Boolean repeatsOnThursday;
+    Boolean repeatsOnFriday;
+    Boolean repeatsOnSaturday;
+    Boolean repeatsOnSunday;
     Boolean done;
    
     public static ChoreEntity from(EditChoreDto chore) {
