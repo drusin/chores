@@ -1,21 +1,6 @@
+import type { ChoreDto, EditChoreDto } from './types';
+
 const API_URL = '/api/'
-
-export type ChoreDto = {
-    id: number,
-    assignedTo: string,
-    title: string,
-    date: string,
-    repeatsInDays: number,
-    done: boolean
-}
-
-export type EditChoreDto = {
-    assignedTo: string,
-    title: string,
-    date: string,
-    repeatsInDays: number,
-    done: boolean
-}
 
 export async function getChores() {
     const request = await fetch(API_URL)

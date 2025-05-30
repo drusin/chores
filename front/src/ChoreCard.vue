@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Chore } from './state';
+import type { Chore } from './types';
 const { chore } = defineProps<{
     chore: Chore,
 }>();

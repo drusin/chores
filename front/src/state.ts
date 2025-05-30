@@ -1,26 +1,12 @@
-import { getChores, createChore as createChoreCall, type EditChoreDto, type ChoreDto } from './gateway.ts';
+import { getChores, createChore as createChoreCall } from './gateway';
 import { ref, type Ref } from 'vue';
+import type { EditChoreDto, ChoreDto, Chore, State } from './types';
 
 export const ChoreStatus = {
     PLANNED: 'planned',
     DUE: 'due',
     OVERDUE: 'overdue',
     DONE: 'done'
-};
-
-export type Chore = {
-    id: number,
-    assignedTo: string,
-    title: string,
-    date: Date,
-    repeatsInDays: number,
-    done: boolean,
-    status: string
-};
-
-export type State = {
-    chores: Chore[],
-    users: string[]
 };
 
 export const state: Ref<State> = ref({ 

@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { type EditChoreDto } from './gateway.ts';
+import type { EditChoreDto } from './types';
 
 const showForm = ref(false);
 let choreModel = newModel();
