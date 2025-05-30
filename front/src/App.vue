@@ -22,26 +22,7 @@
 
     <button class="add-btn" @click="newChoreModal?.show()">+</button>
     
-    
-    <NewChoreModal ref="new-chore-modal" />
-    <!-- <div class="modal" v-if="showForm">
-      <div class="modal-content">
-        <h3>Add New Chore</h3>
-        <input v-model="newChore.title" placeholder="Title" />
-        <select v-model="newChore.assigned">
-          <option>Dawid</option>
-          <option>Alex</option>
-          <option>Vincent</option>
-          <option>All</option>
-        </select>
-        <input type="date" v-model="newChore.due" />
-        <input v-model="newChore.image" placeholder="Image URL (optional)" />
-        <div class="modal-actions">
-          <button @click="addChore">Save</button>
-          <button @click="showForm = false">Cancel</button>
-        </div>
-      </div>
-    </div> -->
+    <NewChoreModal ref="new-chore-modal" @create="createChore" />
   </div>
 </template>
 
@@ -49,13 +30,17 @@
 import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import NewChoreModal from './NewChoreModal.vue';
-import type { StateApi } from './types';
+import type { EditChoreDto, StateApi } from './types';
 
-defineProps<{
+const props = defineProps<{
   state: StateApi;
 }>();
 
 const newChoreModal = useTemplateRef('new-chore-modal');
+
+function createChore(chore: EditChoreDto): void {
+  props.state.createChore(chore);
+}
 
 function getProfilePic(person: string): string {
   const map = {

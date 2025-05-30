@@ -12,10 +12,12 @@ export default {
     createChore: async(chore: EditChoreDto) => {
         const request = await fetch(API_URL, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(chore)
         });
         const json = await request.json();
         return json as ChoreDto;
     }
 } as Gateway;
-

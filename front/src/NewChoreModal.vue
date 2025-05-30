@@ -13,7 +13,7 @@
       <input v-model="choreModel.image" placeholder="Image URL (optional)" />
       <div class="modal-actions">
         <button @click="addChore">Save</button>
-        <button @click="showForm = false">Cancel</button>
+        <button @click="hide()">Cancel</button>
       </div>
     </div>
   </div>
@@ -31,6 +31,11 @@ defineExpose({
   hide
 });
 
+const emit = defineEmits<{
+  create: [EditChoreDto];
+}>();
+
+
 function show() {
   choreModel = newModel();
   showForm.value = true;
@@ -38,6 +43,11 @@ function show() {
 
 function hide() {
   showForm.value = false;
+}
+
+function addChore() {
+  emit('create', choreModel);
+  hide();
 }
 
 function newModel(): EditChoreDto {
