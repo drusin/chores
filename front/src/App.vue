@@ -12,7 +12,7 @@
         </div>
         <ul class="chore-list">
           <ChoreCard
-            v-for="(chore, idx) in choresFor(person)"
+            v-for="(chore, idx) in state.choresFor(person)"
             :key="idx"
             :chore="chore"
           />
@@ -46,14 +46,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import NewChoreModal from './NewChoreModal.vue';
-import { state, setupState, choresFor } from './state';
+import type { StateApi } from './types';
+
+defineProps<{
+  state: StateApi;
+}>();
 
 const newChoreModal = useTemplateRef('new-chore-modal');
-setupState();
-
 
 function getProfilePic(person: string): string {
   const map = {

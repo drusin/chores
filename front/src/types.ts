@@ -29,3 +29,15 @@ export type State = {
     chores: Chore[],
     users: string[]
 };
+
+export type Gateway = {
+    getChores: () => Promise<ChoreDto[]>;
+    createChore: (chore: EditChoreDto) => Promise<ChoreDto>;
+};
+
+export type StateApi = {
+    readonly chores: Chore[];
+    readonly users: string[];
+    choresFor: (name: string) => Chore[];
+    createChore: (newChore: EditChoreDto) => Promise<void>;
+};

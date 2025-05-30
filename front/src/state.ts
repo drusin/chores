@@ -1,6 +1,5 @@
-import { getChores, createChore as createChoreCall } from './gateway';
 import { ref, type Ref } from 'vue';
-import type { EditChoreDto, ChoreDto, Chore, State } from './types';
+import type { EditChoreDto, ChoreDto, Chore, State, Gateway, StateApi } from './types';
 
 export const ChoreStatus = {
     PLANNED: 'planned',
@@ -9,16 +8,11 @@ export const ChoreStatus = {
     DONE: 'done'
 };
 
-export const state: Ref<State> = ref({ 
-    chores: [],
-    users: [ 'Alex', 'Dawid', 'Vincent' ]
-});
-
-export async function setupState() {
-    const choreDtos = await getChores();
+async function setupState(state: Ref<State>, gateway: Gateway) {
+    const choreDtos = await gateway.getChores();
     const chores = choreDtos.map(fromDto);
     state.value.chores = chores;
-    sortChores();
+    sortChores(state);
 }
 
 function fromDto(dto: ChoreDto): Chore {
@@ -55,17 +49,31 @@ function statusGetter({ done, date }: { done: boolean, date: Date} ) {
     return ChoreStatus.PLANNED;
 }
 
-export function choresFor(name: string) {
+function choresFor(state: Ref<State>, name: string) {
     return state.value.chores.filter(chore => chore.assignedTo === name);
 }
 
-export async function createChore(newChore: EditChoreDto) {
-    const dto = await createChoreCall(newChore);
+async function createChore(state: Ref<State>, gateway: Gateway, newChore: EditChoreDto) {
+    const dto = await gateway.createChore(newChore);
     const chore = fromDto(dto);
     state.value.chores.push(chore);
-    sortChores();
+    sortChores(state);
 }
 
-function sortChores() {
+function sortChores(state: Ref<State>) {
     state.value.chores.sort((left, right) => left.date.getTime() - right.date.getTime());
+}
+
+export default function (gateway: Gateway): StateApi {
+    const state: Ref<State> = ref({ 
+        chores: [],
+        users: [ 'Alex', 'Dawid', 'Vincent' ]
+    });
+    setupState(state, gateway);
+    return {
+        get chores() { return state.value.chores; },
+        get users() { return state.value.users; },
+        choresFor: (name: string) => choresFor(state, name),
+        createChore: (newChore: EditChoreDto) => createChore(state, gateway, newChore)
+    }
 }

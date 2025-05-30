@@ -1,18 +1,21 @@
-import type { ChoreDto, EditChoreDto } from './types';
+import type { ChoreDto, EditChoreDto, Gateway } from './types';
 
 const API_URL = '/api/'
 
-export async function getChores() {
-    const request = await fetch(API_URL)
-    const json = await request.json();
-    return json as ChoreDto[];
-}
+export default {
+    getChores: async() => {
+        const request = await fetch(API_URL)
+        const json = await request.json();
+        return json as ChoreDto[];
+    },
+    
+    createChore: async(chore: EditChoreDto) => {
+        const request = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify(chore)
+        });
+        const json = await request.json();
+        return json as ChoreDto;
+    }
+} as Gateway;
 
-export async function createChore(chore: EditChoreDto): Promise<ChoreDto> {
-    const request = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(chore)
-    });
-    const json = await request.json();
-    return json as ChoreDto;
-}
