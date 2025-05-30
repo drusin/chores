@@ -13,7 +13,7 @@
         class="chore-image"
       />
       <button @click.stop>📑</button>
-      <button @click.stop>🚮</button>
+      <button @click.stop="$emit('delete')">🚮</button>
     </div>
   </li>
 </template>
@@ -28,6 +28,8 @@ const { chore } = defineProps<{
 
 defineEmits<{
   toggle: [void],
+  delete: [void],
+  edit: [void],
 }>();
 
 function displayDate() {

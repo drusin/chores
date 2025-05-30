@@ -33,4 +33,10 @@ export default {
         return json as ChoreDto;
     },
 
+    deleteChore: async(id: number) => {
+        await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+    }
+
 } as Gateway;

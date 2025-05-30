@@ -69,6 +69,11 @@ async function toggleChore(state: Ref<State>, gateway: Gateway, id: number) {
     await refreshChores(state, gateway);
 }
 
+async function deleteChore(state: Ref<State>, gateway: Gateway, id: number) {
+    await gateway.deleteChore(id);
+    await refreshChores(state, gateway);
+}
+
 export default function (gateway: Gateway): StateApi {
     const state: Ref<State> = ref({ 
         chores: [],
@@ -81,5 +86,6 @@ export default function (gateway: Gateway): StateApi {
         choresFor: (name: string) => choresFor(state, name),
         createChore: (newChore: EditChoreDto) => createChore(state, gateway, newChore),
         toggleChore: (id: number) => toggleChore(state, gateway, id),
+        deleteChore: (id: number) => deleteChore(state, gateway, id)
     }
 }

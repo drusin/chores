@@ -8,6 +8,7 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,12 @@ public class ChoreApi {
         return repository.save(ChoreEntity.from(newChore));
     }
 
+    @DeleteMapping(path = "/{id}")
+    public void deleteChore(@PathVariable Long id) {
+        ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
+        repository.delete(chore);
+    }
+
     @PutMapping(path = "/{id}")
     public ChoreEntity updateChore(@PathVariable Long id, @RequestBody EditChoreDto update) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
@@ -50,7 +57,6 @@ public class ChoreApi {
 
         while (plannedDate.isBefore(now)) {
             plannedDate = plannedDate.plus(choreDto.repeatsInDays(), ChronoUnit.DAYS);
-            
         }
 
         EditChoreDto nextRecurrence = choreDto.recurrence(Date.from(plannedDate));

@@ -16,6 +16,7 @@
             :key="idx"
             :chore="chore"
             @toggle="toggleChore(chore.id)"
+            @delete="deleteChore(chore.id)"
           />
         </ul>
       </div>
@@ -59,6 +60,12 @@ function modalSubmit(chore: EditChoreDto, id: number | null): void {
 
 function toggleChore(id: number) {
   state.toggleChore(id);
+}
+
+function deleteChore(id: number) {
+  if (confirm('Bist du sicher, dass du diese Aufgabe löschen möchtest?')) {
+    state.deleteChore(id);
+  }
 }
 
 function getProfilePic(person: string): string {
