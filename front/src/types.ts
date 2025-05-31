@@ -6,6 +6,7 @@ export type ChoreDto = {
     repeatsInDays: number,
     done: boolean
 };
+//TODO: adapt frontend to new dtos
 
 export type EditChoreDto = {
     assignedTo: string,

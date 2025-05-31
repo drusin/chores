@@ -6,18 +6,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import jakarta.persistence.GeneratedValue;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChoreEntity {
+@Accessors(fluent = true)
+public class ChoreEntity implements Repeatable {
     @Id @GeneratedValue Long id;
     String assignedTo;
     String title;
-    Date date;
+    Date plannedDate;
+    Date doneDate;
     Integer repeatsEveryWeeks;
     Boolean repeatsOnMonday;
     Boolean repeatsOnTuesday;
@@ -37,8 +41,15 @@ public class ChoreEntity {
     public void update(EditChoreDto update) {
         assignedTo = update.assignedTo();
         title = update.title();
-        date = update.date();
-        repeatsInDays = update.repeatsInDays();
+        plannedDate = update.plannedDate();
+        repeatsEveryWeeks = update.repeatsEveryWeeks();
+        repeatsOnMonday = update.repeatsOnMonday();
+        repeatsOnTuesday = update.repeatsOnTuesday();
+        repeatsOnWednesday = update.repeatsOnWednesday();
+        repeatsOnThursday = update.repeatsOnThursday();
+        repeatsOnFriday = update.repeatsOnFriday();
+        repeatsOnSaturday = update.repeatsOnSaturday();
+        repeatsOnSunday = update.repeatsOnSunday();
         done = update.done();
     }
     

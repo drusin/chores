@@ -1,9 +1,14 @@
 package com.example.demo;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,22 +49,31 @@ public class ChoreApi {
     @PutMapping(path = "/{id}")
     public ChoreEntity updateChore(@PathVariable Long id, @RequestBody EditChoreDto update) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
-        if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done()) && update.repeatsEveryWeeks() != null && update.repeatsEveryWeeks() > 0) {
-            createRecurring(update);
+        if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done())) {
+            chore.doneDate = new Date();
+            if (update.repeatsEveryWeeks() != null && update.repeatsEveryWeeks() > 0) {
+                createRecurring(update);
+            }
+        }
+        if (Boolean.TRUE.equals(chore.done) && Boolean.FALSE.equals(update.done())) {
+            chore.doneDate = null;
         }
         chore.update(update);
         return repository.save(chore);
     }
 
     private void createRecurring(EditChoreDto choreDto) {
-        Instant plannedDate = choreDto.date().toInstant().truncatedTo(ChronoUnit.DAYS);
-        Instant now = new Date().toInstant().truncatedTo(ChronoUnit.DAYS);
-
-        while (plannedDate.isBefore(now)) {
-            plannedDate = plannedDate.plus(choreDto.repeatsInDays(), ChronoUnit.DAYS);
+        List<DayOfWeek> daysOfWeek = Helpers.getDaysOfWeek(choreDto);
+        Optional<DayOfWeek> nextThisWeek = Helpers.findNextThisWeek(daysOfWeek);
+        EditChoreDto nextChore;
+        if (nextThisWeek.isPresent()) {
+            LocalDate nextDate = LocalDate.now().with(nextThisWeek.get());
+            nextChore = choreDto.recurrence(Date.from(nextDate.atStartOfDay().toInstant(ZoneOffset.UTC)));
+        } 
+        else {
+            LocalDate nextDay = Helpers.mondayInWeeks(choreDto.repeatsEveryWeeks()).with(TemporalAdjusters.nextOrSame(daysOfWeek.getFirst()));
+            nextChore = choreDto.recurrence(Date.from(nextDay.atStartOfDay().toInstant(ZoneOffset.UTC)));
         }
-
-        EditChoreDto nextRecurrence = choreDto.recurrence(Date.from(plannedDate));
-        repository.save(ChoreEntity.from(nextRecurrence));
+        createChore(nextChore);
     }
 }
