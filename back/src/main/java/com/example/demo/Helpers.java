@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class Helpers {
-    public static List<DayOfWeek> getDaysOfWeek(Repeatable repeatable) {
+    public static List<DayOfWeek> getDaysOfWeek(EditChoreDto dto) {
         return List.of(
-            repeatable.repeatsOnMonday() ? DayOfWeek.MONDAY : null,
-            repeatable.repeatsOnTuesday() ? DayOfWeek.TUESDAY : null,
-            repeatable.repeatsOnWednesday() ? DayOfWeek.WEDNESDAY : null,
-            repeatable.repeatsOnThursday() ? DayOfWeek.THURSDAY : null,
-            repeatable.repeatsOnFriday() ? DayOfWeek.FRIDAY : null,
-            repeatable.repeatsOnSaturday() ? DayOfWeek.SATURDAY : null,
-            repeatable.repeatsOnSunday() ? DayOfWeek.SUNDAY : null
+            dto.repeatsOnMonday() ? DayOfWeek.MONDAY : null,
+            dto.repeatsOnTuesday() ? DayOfWeek.TUESDAY : null,
+            dto.repeatsOnWednesday() ? DayOfWeek.WEDNESDAY : null,
+            dto.repeatsOnThursday() ? DayOfWeek.THURSDAY : null,
+            dto.repeatsOnFriday() ? DayOfWeek.FRIDAY : null,
+            dto.repeatsOnSaturday() ? DayOfWeek.SATURDAY : null,
+            dto.repeatsOnSunday() ? DayOfWeek.SUNDAY : null
         ).stream().filter(day -> day != null).toList();
     }
 

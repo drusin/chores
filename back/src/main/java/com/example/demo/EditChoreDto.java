@@ -11,16 +11,16 @@ public record EditChoreDto (
     String assignedTo,
     String title,
     Date plannedDate,
-    Integer repeatsEveryWeeks,
-    Boolean repeatsOnMonday,
-    Boolean repeatsOnTuesday,
-    Boolean repeatsOnWednesday,
-    Boolean repeatsOnThursday,
-    Boolean repeatsOnFriday,
-    Boolean repeatsOnSaturday,
-    Boolean repeatsOnSunday,
-    Boolean done
-) implements Repeatable {
+    int repeatsEveryWeeks,
+    boolean repeatsOnMonday,
+    boolean repeatsOnTuesday,
+    boolean repeatsOnWednesday,
+    boolean repeatsOnThursday,
+    boolean repeatsOnFriday,
+    boolean repeatsOnSaturday,
+    boolean repeatsOnSunday,
+    boolean done
+) {
     public EditChoreDto recurrence(Date newDate) {
         return toBuilder().plannedDate(newDate).done(false).build();
     }

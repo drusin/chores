@@ -24,11 +24,11 @@ let choreModel: EditChoreDto;
 let currentId: number | null = null;
 const dateModel = computed({
   get: () => {
-    const date = new Date(choreModel.date);
+    const date = new Date(choreModel.plannedDate);
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
   },
   set: (value) => {
-    choreModel.date = value;
+    choreModel.plannedDate = value;
   }
 });
 

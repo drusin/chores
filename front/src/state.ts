@@ -22,28 +22,24 @@ async function refreshChores(internals: Internals) {
 }
 
 function fromDto(dto: ChoreDto): Chore {
-    const date = normalizeDate(new Date(dto.date));
+    const plannedDate = normalizeDate(new Date(dto.plannedDate));
     const done = dto.done;
-    return { 
-        id: dto.id,
-        assignedTo: dto.assignedTo,
-        title: dto.title,
-        date: date,
-        repeatsInDays: dto.repeatsInDays,
-        done: done,
-        get status() { return statusGetter({ done, date }); }
-    };
+    return Object.assign({}, dto, {
+        plannedDate: plannedDate,
+        doneDate: dto.doneDate ? normalizeDate(new Date(dto.doneDate)) : null,
+        get status() { return statusGetter(done, plannedDate); }
+    });
 }
 
-function statusGetter({ done, date }: { done: boolean, date: Date} ) {
+function statusGetter(done: boolean, plannedDate: Date) {
     if (done) {
         return ChoreStatus.DONE;
     }
     const now = normalizeDate(new Date());
-    if (date.getTime() === now.getTime()) {
+    if (plannedDate.getTime() === now.getTime()) {
         return ChoreStatus.DUE;
     }
-    if (now > date) {
+    if (now > plannedDate) {
         return ChoreStatus.OVERDUE;
     }
     return ChoreStatus.PLANNED;
@@ -59,8 +55,18 @@ async function createChore(internals: Internals, newChore: EditChoreDto) {
 }
 
 function sortChores(internals: Internals) {
-    internals.state.value.chores.sort((left, right) => left.date.getTime() - right.date.getTime());
-    internals.state.value.chores.sort((left, right) => (left.done ? 1 : -1) - (right.done ? 1 : -1));
+    internals.state.value.chores.sort((left, right) => {
+        if (left.doneDate) {
+            if (right.doneDate) {
+                return left.doneDate.getTime() - right.doneDate.getTime();
+            }
+            return -1; // left is done, right is not
+        }
+        if (right.doneDate) {
+            return 1; // right is done, left is not
+        }
+        return left.plannedDate.getTime() - right.plannedDate.getTime();
+    });
 }
 
 async function toggleChore(internals: Internals, id: number) {
@@ -68,7 +74,7 @@ async function toggleChore(internals: Internals, id: number) {
     if (!chore) {
         return;
     }
-    const dto: EditChoreDto = Object.assign({}, chore, { done: !chore.done, date: chore.date.toISOString() });
+    const dto: EditChoreDto = Object.assign({}, chore, { done: !chore.done, plannedDate: chore.plannedDate.toISOString() });
     await internals.gateway.editChore(chore.id, dto);
     await refreshChores(internals);
 }

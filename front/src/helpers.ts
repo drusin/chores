@@ -1,4 +1,4 @@
-import type { Chore } from "./types";
+import type { Chore, EditChoreDto } from "./types";
 
 export function normalizeDate(date: Date) {
     const returnVal = new Date(date);
@@ -6,12 +6,9 @@ export function normalizeDate(date: Date) {
     return returnVal;
 }
 
-export function choreToEditChoreDto(chore: Chore) {
-    return {
-        assignedTo: chore.assignedTo,
-        title: chore.title,
-        date: chore.date.toISOString(),
-        repeatsInDays: chore.repeatsInDays,
-        done: chore.done
-    };
+export function choreToEditChoreDto(chore: Chore): EditChoreDto {
+    return Object.assign({}, chore, {
+        plannedDate: chore.plannedDate.toISOString(),
+        doneDate: chore.doneDate?.toISOString()
+    });
 }

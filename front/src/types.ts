@@ -2,17 +2,31 @@ export type ChoreDto = {
     id: number,
     assignedTo: string,
     title: string,
-    date: string,
-    repeatsInDays: number,
+    plannedDate: string,
+    doneDate: string | null,
+    repeatsEveryWeeks: number | null,
+    repeatsOnMonday: boolean | null,
+    repeatsOnTuesday: boolean | null,
+    repeatsOnWednesday: boolean | null,
+    repeatsOnThursday: boolean | null,
+    repeatsOnFriday: boolean | null,
+    repeatsOnSaturday: boolean | null,
+    repeatsOnSunday: boolean | null,
     done: boolean
 };
-//TODO: adapt frontend to new dtos
 
 export type EditChoreDto = {
     assignedTo: string,
     title: string,
-    date: string,
-    repeatsInDays: number,
+    plannedDate: string,
+    repeatsEveryWeeks: number | null,
+    repeatsOnMonday: boolean | null,
+    repeatsOnTuesday: boolean | null,
+    repeatsOnWednesday: boolean | null,
+    repeatsOnThursday: boolean | null,
+    repeatsOnFriday: boolean | null,
+    repeatsOnSaturday: boolean | null,
+    repeatsOnSunday: boolean | null,
     done: boolean
 };
 
@@ -20,8 +34,16 @@ export type Chore = {
     id: number,
     assignedTo: string,
     title: string,
-    date: Date,
-    repeatsInDays: number,
+    plannedDate: Date,
+    doneDate: Date | null
+    repeatsEveryWeeks: number | null,
+    repeatsOnMonday: boolean | null,
+    repeatsOnTuesday: boolean | null,
+    repeatsOnWednesday: boolean | null,
+    repeatsOnThursday: boolean | null,
+    repeatsOnFriday: boolean | null,
+    repeatsOnSaturday: boolean | null,
+    repeatsOnSunday: boolean | null,
     done: boolean,
     status: string
 };

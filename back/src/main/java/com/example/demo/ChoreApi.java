@@ -1,11 +1,10 @@
 package com.example.demo;
 
 import java.time.DayOfWeek;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +31,14 @@ public class ChoreApi {
 
 	@GetMapping(path = "/") 
     public List<ChoreEntity> getChores() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).toList();
+        List<ChoreEntity> list = StreamSupport.stream(repository.findAll().spliterator(), false).toList();
+        System.out.println("Returning chores: " + Arrays.toString(list.toArray()));
+        return list;
     }
 
     @PostMapping(path = "/")
     public ChoreEntity createChore(@RequestBody EditChoreDto newChore) {
+        System.out.println("Creating chore: " + newChore);
         return repository.save(ChoreEntity.from(newChore));
     }
 
@@ -51,7 +53,7 @@ public class ChoreApi {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
         if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done())) {
             chore.doneDate = new Date();
-            if (update.repeatsEveryWeeks() != null && update.repeatsEveryWeeks() > 0) {
+            if (update.repeatsEveryWeeks() > 0) {
                 createRecurring(update);
             }
         }
