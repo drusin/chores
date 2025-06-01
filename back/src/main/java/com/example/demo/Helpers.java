@@ -5,10 +5,11 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class Helpers {
     public static List<DayOfWeek> getDaysOfWeek(EditChoreDto dto) {
-        return List.of(
+        return Stream.of(
             dto.repeatsOnMonday() ? DayOfWeek.MONDAY : null,
             dto.repeatsOnTuesday() ? DayOfWeek.TUESDAY : null,
             dto.repeatsOnWednesday() ? DayOfWeek.WEDNESDAY : null,
@@ -16,7 +17,7 @@ public class Helpers {
             dto.repeatsOnFriday() ? DayOfWeek.FRIDAY : null,
             dto.repeatsOnSaturday() ? DayOfWeek.SATURDAY : null,
             dto.repeatsOnSunday() ? DayOfWeek.SUNDAY : null
-        ).stream().filter(day -> day != null).toList();
+        ).filter(day -> day != null).toList();
     }
 
     public static Optional<DayOfWeek> findNextThisWeek(List<DayOfWeek> daysOfWeek) {

@@ -7,6 +7,27 @@
         <option v-for="user in users" :key="user">{{ user }}</option>
       </select>
       <input type="date" v-model="dateModel" />
+
+      <!-- Repetition UI -->
+      <div style="margin: 1em 0;">
+        <label>
+          <input type="number" min="0" v-model.number="choreModel.repeatsEveryWeeks" style="width: 4em;" />
+          Repeat every (weeks)
+        </label>
+        <div style="margin-top: 0.5em;">
+          <label v-for="(day, idx) in daysOfWeek" :key="day.key" style="margin-right: 0.5em;">
+            <input
+              type="checkbox"
+              v-model="choreModel[day.model]"
+              :true-value="true"
+              :false-value="false"
+            />
+            {{ day.label }}
+          </label>
+        </div>
+      </div>
+      <!-- End Repetition UI -->
+
       <div class="modal-actions">
         <button @click="submit()">Save</button>
         <button @click="hide()">Cancel</button>
@@ -32,6 +53,16 @@ const dateModel = computed({
   }
 });
 
+const daysOfWeek = [
+  { key: 'mon', label: 'Mon', model: 'repeatsOnMonday' },
+  { key: 'tue', label: 'Tue', model: 'repeatsOnTuesday' },
+  { key: 'wed', label: 'Wed', model: 'repeatsOnWednesday' },
+  { key: 'thu', label: 'Thu', model: 'repeatsOnThursday' },
+  { key: 'fri', label: 'Fri', model: 'repeatsOnFriday' },
+  { key: 'sat', label: 'Sat', model: 'repeatsOnSaturday' },
+  { key: 'sun', label: 'Sun', model: 'repeatsOnSunday' },
+];
+
 defineProps<{
   users: string[]
 }>();
@@ -44,7 +75,6 @@ defineExpose({
 const emit = defineEmits<{
   submit: [EditChoreDto, number | null];
 }>();
-
 
 function show(model: EditChoreDto, id: number | null = null) {
   currentId = id;
@@ -60,7 +90,6 @@ function submit() {
   emit('submit', choreModel, currentId);
   hide();
 }
-
 </script>
 
 <style>

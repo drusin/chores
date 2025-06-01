@@ -60,10 +60,10 @@ function sortChores(internals: Internals) {
             if (right.doneDate) {
                 return left.doneDate.getTime() - right.doneDate.getTime();
             }
-            return -1; // left is done, right is not
+            return 1; // left is done, right is not
         }
         if (right.doneDate) {
-            return 1; // right is done, left is not
+            return -1; // right is done, left is not
         }
         return left.plannedDate.getTime() - right.plannedDate.getTime();
     });

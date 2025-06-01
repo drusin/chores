@@ -45,12 +45,14 @@ public class ChoreApi {
     @DeleteMapping(path = "/{id}")
     public void deleteChore(@PathVariable Long id) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
+        System.out.println("Deleting chore: " + chore);
         repository.delete(chore);
     }
 
     @PutMapping(path = "/{id}")
     public ChoreEntity updateChore(@PathVariable Long id, @RequestBody EditChoreDto update) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
+        System.out.println("Updating chore: " + chore + " with update: " + update);
         if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done())) {
             chore.doneDate = new Date();
             if (update.repeatsEveryWeeks() > 0) {
@@ -65,6 +67,7 @@ public class ChoreApi {
     }
 
     private void createRecurring(EditChoreDto choreDto) {
+        System.out.println("Creating recurring chore for: " + choreDto);
         List<DayOfWeek> daysOfWeek = Helpers.getDaysOfWeek(choreDto);
         Optional<DayOfWeek> nextThisWeek = Helpers.findNextThisWeek(daysOfWeek);
         EditChoreDto nextChore;
