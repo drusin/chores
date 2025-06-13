@@ -7,8 +7,10 @@
       <strong>{{ chore.data.title }}</strong>
       <span class="due-date" v-show="!chore.data.done">{{ displayDate() }}</span>
       <img v-if="chore.imageUrl" :src="chore.imageUrl" class="chore-image">
-      <button @click.stop="$emit('edit')">📑</button>
-      <button @click.stop="$emit('delete')">🚮</button>
+      <div class="button-row">
+        <button @click.stop="$emit('edit')"><img src="/public/editing.png" width="25" height="25" /></button>
+        <button @click.stop="$emit('delete')"><img src="/public/recycle-bin.png" width="25" height="25" /></button>
+      </div>
     </div>
   </li>
 </template>
@@ -69,4 +71,19 @@ function displayDate() {
   max-width: 100%;
   border-radius: 6px;
 }
+.button-row {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 0.25em;
+  justify-content: space-between;
+  button {
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+  }
+}
+
 </style>

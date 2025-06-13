@@ -69,7 +69,7 @@ function editChore(id: number) {
     console.error('Chore not found:', id);
     return;
   }
-  editChoreModal.value?.show(chore, id);
+  editChoreModal.value?.show(chore.data, chore.imageUrl, id);
 }
 
 function getProfilePic(person: string): string {

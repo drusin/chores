@@ -82,10 +82,10 @@ watch(file, (newFile) => {
   reader.readAsDataURL(newFile);
 })
 
-function show(model: Chore, id: number | null = null) {
+function show(model: EditChoreDto, imageUrl: string | null = null, id: number | null = null) {
   currentId = id;
-  choreModel.value = model.data;
-  imagePreview.value = model.imageUrl || undefined;
+  choreModel.value = model;
+  imagePreview.value = imageUrl || undefined;
   file.value = undefined;
   showForm.value = true;
 }
