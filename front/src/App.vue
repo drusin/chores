@@ -15,7 +15,7 @@
             v-for="(chore, idx) in state.choresFor(person)"
             :key="idx"
             :chore="chore"
-            @toggle="toggleChore(chore.id)"
+            @toggle="state.toggleChore(chore.id)"
             @edit="editChore(chore.id)"
             @delete="deleteChore(chore.id)"
           />
@@ -23,18 +23,18 @@
       </div>
     </main>
 
-    <button class="add-btn" @click="openNewChoreModal">+</button>
+    <button class="add-btn" @click="openEditChoreModal">+</button>
     
-    <NewChoreModal ref="edit-chore-modal" :users="state.users" @submit="modalSubmit" />
+    <EditChoreModal ref="edit-chore-modal" :users="state.users" @submit="modalSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
-import NewChoreModal from './EditChoreModal.vue';
+import EditChoreModal from './EditChoreModal.vue';
 import type { EditChoreDto, StateApi } from './types';
-import { choreToEditChoreDto } from './helpers';
+import { choreToEditChoreDto, emptyEditChoreDto } from './helpers';
 
 const { state } = defineProps<{
   state: StateApi;
@@ -42,35 +42,16 @@ const { state } = defineProps<{
 
 const editChoreModal = useTemplateRef('edit-chore-modal');
 
-function openNewChoreModal() {
-  editChoreModal.value?.show(
-    {
-      assignedTo: '',
-      title: '',
-      plannedDate: '',
-      repeatsEveryWeeks: 0,
-      repeatsOnMonday: false,
-      repeatsOnTuesday: false,
-      repeatsOnWednesday: false,
-      repeatsOnThursday: false,
-      repeatsOnFriday: false,
-      repeatsOnSaturday: false,
-      repeatsOnSunday: false,
-      done: false
-    } as EditChoreDto
-  );
+function openEditChoreModal() {
+  editChoreModal.value?.show(emptyEditChoreDto());
 }
 
 function modalSubmit(chore: EditChoreDto, id: number | null): void {
   if (id === null) {
     state.createChore(chore);
-    return
+    return;
   }
   state.editChore
-}
-
-function toggleChore(id: number) {
-  state.toggleChore(id);
 }
 
 function deleteChore(id: number) {

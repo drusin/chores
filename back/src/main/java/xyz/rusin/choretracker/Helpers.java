@@ -1,9 +1,10 @@
-package com.example.demo;
+package xyz.rusin.choretracker;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -17,7 +18,7 @@ public class Helpers {
             dto.repeatsOnFriday() ? DayOfWeek.FRIDAY : null,
             dto.repeatsOnSaturday() ? DayOfWeek.SATURDAY : null,
             dto.repeatsOnSunday() ? DayOfWeek.SUNDAY : null
-        ).filter(day -> day != null).toList();
+        ).filter(Objects::nonNull).toList();
     }
 
     public static Optional<DayOfWeek> findNextThisWeek(List<DayOfWeek> daysOfWeek) {

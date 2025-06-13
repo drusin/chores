@@ -1,4 +1,4 @@
-package com.example.demo;
+package xyz.rusin.choretracker;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -12,18 +12,13 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequestMapping("/chores")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChoreApi {
     
@@ -53,13 +48,13 @@ public class ChoreApi {
     public ChoreEntity updateChore(@PathVariable Long id, @RequestBody EditChoreDto update) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
         System.out.println("Updating chore: " + chore + " with update: " + update);
-        if (Boolean.FALSE.equals(chore.done) && Boolean.TRUE.equals(update.done())) {
+        if (!chore.done && update.done()) {
             chore.doneDate = new Date();
             if (update.repeatsEveryWeeks() > 0) {
                 createRecurring(update);
             }
         }
-        if (Boolean.TRUE.equals(chore.done) && Boolean.FALSE.equals(update.done())) {
+        if (chore.done && !update.done()) {
             chore.doneDate = null;
         }
         chore.update(update);

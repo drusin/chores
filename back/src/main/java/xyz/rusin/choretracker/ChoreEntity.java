@@ -1,4 +1,4 @@
-package com.example.demo;
+package xyz.rusin.choretracker;
 
 import java.util.Date;
 
@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import jakarta.persistence.GeneratedValue;
 
 @Entity
@@ -20,6 +19,7 @@ public class ChoreEntity {
     String title;
     Date plannedDate;
     Date doneDate;
+    String imageName;
     int repeatsEveryWeeks;
     boolean repeatsOnMonday;
     boolean repeatsOnTuesday;
@@ -40,6 +40,7 @@ public class ChoreEntity {
         assignedTo = update.assignedTo();
         title = update.title();
         plannedDate = update.plannedDate();
+        imageName = update.imageName();
         repeatsEveryWeeks = update.repeatsEveryWeeks();
         repeatsOnMonday = update.repeatsOnMonday();
         repeatsOnTuesday = update.repeatsOnTuesday();

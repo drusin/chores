@@ -1,16 +1,15 @@
-package com.example.demo;
+package xyz.rusin.choretracker;
 
 import java.util.Date;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Builder(toBuilder = true)
 public record EditChoreDto (
     String assignedTo,
     String title,
     Date plannedDate,
+    String imageName,
     int repeatsEveryWeeks,
     boolean repeatsOnMonday,
     boolean repeatsOnTuesday,

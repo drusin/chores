@@ -14,16 +14,14 @@
           <input type="number" min="0" v-model.number="choreModel.repeatsEveryWeeks" style="width: 4em;" />
           Repeat every (weeks)
         </label>
-        <div style="margin-top: 0.5em;">
-          <label v-for="(day, idx) in daysOfWeek" :key="day.key" style="margin-right: 0.5em;">
-            <input
-              type="checkbox"
-              v-model="choreModel[day.model]"
-              :true-value="true"
-              :false-value="false"
-            />
-            {{ day.label }}
-          </label>
+        <div v-show="choreModel.repeatsEveryWeeks > 0" style="margin-top: 0.5em;">
+          <label>Mo <input type="checkbox" v-model="choreModel.repeatsOnMonday" /></label>
+          <label>Di <input type="checkbox" v-model="choreModel.repeatsOnTuesday" /></label>
+          <label>Mi <input type="checkbox" v-model="choreModel.repeatsOnWednesday" /></label>
+          <label>Do <input type="checkbox" v-model="choreModel.repeatsOnThursday" /></label>
+          <label>Fr <input type="checkbox" v-model="choreModel.repeatsOnFriday" /></label>
+          <label>Sa <input type="checkbox" v-model="choreModel.repeatsOnSaturday" /></label>
+          <label>So <input type="checkbox" v-model="choreModel.repeatsOnSunday" /></label>
         </div>
       </div>
       <!-- End Repetition UI -->
@@ -37,31 +35,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import {ref, computed} from 'vue';
 import type { EditChoreDto } from './types';
+import {emptyEditChoreDto} from "./helpers.ts";
 
 const showForm = ref(false);
-let choreModel: EditChoreDto;
+let choreModel = ref(emptyEditChoreDto());
 let currentId: number | null = null;
+
 const dateModel = computed({
   get: () => {
-    const date = new Date(choreModel.plannedDate);
+    const date = new Date(choreModel.value.plannedDate);
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
   },
   set: (value) => {
-    choreModel.plannedDate = value;
+    choreModel.value.plannedDate = value;
   }
 });
-
-const daysOfWeek = [
-  { key: 'mon', label: 'Mon', model: 'repeatsOnMonday' },
-  { key: 'tue', label: 'Tue', model: 'repeatsOnTuesday' },
-  { key: 'wed', label: 'Wed', model: 'repeatsOnWednesday' },
-  { key: 'thu', label: 'Thu', model: 'repeatsOnThursday' },
-  { key: 'fri', label: 'Fri', model: 'repeatsOnFriday' },
-  { key: 'sat', label: 'Sat', model: 'repeatsOnSaturday' },
-  { key: 'sun', label: 'Sun', model: 'repeatsOnSunday' },
-];
 
 defineProps<{
   users: string[]
@@ -78,7 +68,7 @@ const emit = defineEmits<{
 
 function show(model: EditChoreDto, id: number | null = null) {
   currentId = id;
-  choreModel = model;
+  choreModel.value = model;
   showForm.value = true;
 }
 
@@ -87,7 +77,7 @@ function hide() {
 }
 
 function submit() {
-  emit('submit', choreModel, currentId);
+  emit('submit', choreModel.value, currentId);
   hide();
 }
 </script>

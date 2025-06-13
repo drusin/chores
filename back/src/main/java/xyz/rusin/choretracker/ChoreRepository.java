@@ -1,4 +1,4 @@
-package com.example.demo;
+package xyz.rusin.choretracker;
 
 import org.springframework.data.repository.CrudRepository;
 

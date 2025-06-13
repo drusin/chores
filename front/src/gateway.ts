@@ -1,16 +1,17 @@
 import type { ChoreDto, EditChoreDto, Gateway } from './types';
 
 const API_URL = '/api/'
+const CHORES_URL = API_URL + 'chores/';
 
 export default {
     getChores: async() => {
-        const request = await fetch(API_URL)
+        const request = await fetch(CHORES_URL)
         const json = await request.json();
         return json as ChoreDto[];
     },
     
     createChore: async(chore: EditChoreDto) => {
-        const request = await fetch(API_URL, {
+        const request = await fetch(CHORES_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,7 +23,7 @@ export default {
     },
 
     editChore: async(id: number, chore: EditChoreDto) => {
-        const request = await fetch(`${API_URL}/${id}`, {
+        const request = await fetch(`${CHORES_URL}/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,7 +35,7 @@ export default {
     },
 
     deleteChore: async(id: number) => {
-        await fetch(`${API_URL}/${id}`, {
+        await fetch(`${CHORES_URL}/${id}`, {
             method: 'DELETE'
         });
     }

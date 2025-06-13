@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue';
-import type { EditChoreDto, ChoreDto, Chore, State, Gateway, StateApi } from './types';
+import type { Chore, ChoreDto, EditChoreDto, Gateway, State, StateApi } from './types';
 import { normalizeDate } from './helpers';
 
 export const ChoreStatus = {
@@ -16,8 +16,7 @@ type Internals = {
 
 async function refreshChores(internals: Internals) {
     const choreDtos = await internals.gateway.getChores();
-    const chores = choreDtos.map(fromDto);
-    internals.state.value.chores = chores;
+    internals.state.value.chores = choreDtos.map(fromDto);
     sortChores(internals);
 }
 
