@@ -1,18 +1,21 @@
 <template>
   <div class="modal" v-if="showForm">
     <div class="modal-content">
-      <h3>Add New Chore</h3>
+      <h3>{{ !!currentId ? 'Bearbeiten' : 'Neue Aufgabe' }}</h3>
       <input v-model="choreModel.title" placeholder="Title" />
       <select v-model="choreModel.assignedTo">
         <option v-for="user in users" :key="user">{{ user }}</option>
       </select>
       <input type="date" v-model="dateModel" />
+      <img v-if="!!file" :src="imagePreview" />
+      <input type="file" @change="fileSelected">
 
       <!-- Repetition UI -->
-      <div style="margin: 1em 0;">
+      <div>
         <label>
+          Wiederholen alle
           <input type="number" min="0" v-model.number="choreModel.repeatsEveryWeeks" style="width: 4em;" />
-          Repeat every (weeks)
+          Wochen
         </label>
         <div v-show="choreModel.repeatsEveryWeeks > 0" style="margin-top: 0.5em;">
           <label>Mo <input type="checkbox" v-model="choreModel.repeatsOnMonday" /></label>
@@ -35,23 +38,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed} from 'vue';
+import {ref, computed, type Ref, watch} from 'vue';
 import type { EditChoreDto } from './types';
-import {emptyEditChoreDto} from "./helpers.ts";
-
-const showForm = ref(false);
-let choreModel = ref(emptyEditChoreDto());
-let currentId: number | null = null;
-
-const dateModel = computed({
-  get: () => {
-    const date = new Date(choreModel.value.plannedDate);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-  },
-  set: (value) => {
-    choreModel.value.plannedDate = value;
-  }
-});
+import { emptyEditChoreDto } from "./helpers.ts";
 
 defineProps<{
   users: string[]
@@ -63,12 +52,44 @@ defineExpose({
 });
 
 const emit = defineEmits<{
-  submit: [EditChoreDto, number | null];
+  submit: [ EditChoreDto, File | undefined, number | null ];
 }>();
+
+const showForm = ref(false);
+let choreModel = ref(emptyEditChoreDto());
+let currentId: number | null = null;
+let file: Ref<File | undefined> = ref(undefined);
+const imagePreview: Ref<string | undefined> = ref(undefined);
+
+const dateModel = computed({
+  get: () => {
+    const date = new Date(choreModel.value.plannedDate);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  },
+  set: (value) => {
+    choreModel.value.plannedDate = value;
+  }
+});
+
+watch([choreModel, file], ([newModel, newFile]) => {
+  if (!!newFile) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.value = e?.target?.result as string | undefined; // base64 data URL
+    };
+    reader.readAsDataURL(newFile);
+    return;
+  }
+  if (!newModel.imageName) {
+    imagePreview.value = undefined;
+  }
+  imagePreview.value = newModel.imageName;
+})
 
 function show(model: EditChoreDto, id: number | null = null) {
   currentId = id;
   choreModel.value = model;
+  file.value = undefined;
   showForm.value = true;
 }
 
@@ -77,9 +98,15 @@ function hide() {
 }
 
 function submit() {
-  emit('submit', choreModel.value, currentId);
+  emit('submit', choreModel.value, file.value, currentId);
   hide();
 }
+
+function fileSelected(e: Event) {
+  const fileInput = e.target as HTMLInputElement;
+  file.value = fileInput?.files?.[0];
+}
+
 </script>
 
 <style>
@@ -104,11 +131,16 @@ function submit() {
 .modal-content input,
 .modal-content select {
   width: 100%;
+  box-sizing: border-box;
   margin: 0.5em 0;
   padding: 0.5em;
 }
 .modal-actions {
   display: flex;
   justify-content: space-between;
+}
+img {
+  max-width: 300px;
+  max-height: 300px;
 }
 </style>

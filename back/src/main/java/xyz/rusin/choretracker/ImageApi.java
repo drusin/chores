@@ -22,7 +22,7 @@ public class ImageApi {
     private final String FILE_PATH = "~/choretracker/images/";
 
     @PostMapping("/")
-    public ImageMetadataDto uploadImage(@RequestParam("file") MultipartFile file) {
+    public ImageMetadataDto uploadImage(@RequestParam("image") MultipartFile file) {
         File uploadDir = new File(FILE_PATH);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
@@ -39,9 +39,9 @@ public class ImageApi {
         return new ImageMetadataDto(filename);
     }
 
-    @GetMapping("/{filename:.+}")
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws IOException {
-        Path filePath = Paths.get(FILE_PATH).resolve(filename).normalize();
+    @GetMapping("/{image:.+}")
+    public ResponseEntity<Resource> getFile(@PathVariable String image) throws IOException {
+        Path filePath = Paths.get(FILE_PATH).resolve(image).normalize();
         Resource resource = new UrlResource(filePath.toUri());
 
         if (!resource.exists()) {

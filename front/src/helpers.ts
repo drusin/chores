@@ -17,7 +17,7 @@ export function emptyEditChoreDto() {
     return {
         assignedTo: '',
         title: '',
-        plannedDate: '1970-01-01',
+        plannedDate: '',
         repeatsEveryWeeks: 0,
         repeatsOnMonday: false,
         repeatsOnTuesday: false,

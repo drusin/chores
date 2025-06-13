@@ -73,7 +73,10 @@ async function toggleChore(internals: Internals, id: number) {
     if (!chore) {
         return;
     }
-    const dto: EditChoreDto = Object.assign({}, chore, { done: !chore.done, plannedDate: chore.plannedDate.toISOString() });
+    const dto: EditChoreDto = Object.assign({}, chore, {
+        done: !chore.done,
+        plannedDate: chore.plannedDate.toISOString()
+    });
     await internals.gateway.editChore(chore.id, dto);
     await refreshChores(internals);
 }
@@ -86,6 +89,11 @@ async function deleteChore(internals: Internals, id: number) {
 async function editChore(internals: Internals, id: number, chore: EditChoreDto) {
     await internals.gateway.editChore(id, chore);
     await refreshChores(internals);
+}
+
+async function uploadImage(internals: Internals, image: File) {
+    const { name } = await internals.gateway.uploadImage(image);
+    return name;
 }
 
 export default function (gateway: Gateway): StateApi {
@@ -103,5 +111,6 @@ export default function (gateway: Gateway): StateApi {
         toggleChore: (id: number) => toggleChore(internals, id),
         deleteChore: (id: number) => deleteChore(internals, id),
         editChore: (id: number, chore: EditChoreDto) => editChore(internals, id, chore),
+        uploadImage: (image: File) => uploadImage(internals, image),
     }
 }

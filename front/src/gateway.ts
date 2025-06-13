@@ -1,7 +1,8 @@
-import type { ChoreDto, EditChoreDto, Gateway } from './types';
+import type {ChoreDto, EditChoreDto, Gateway, ImageMetadataDto} from './types';
 
 const API_URL = '/api/'
 const CHORES_URL = API_URL + 'chores/';
+const IMAGE_URL = API_URL + 'images/';
 
 export default {
     getChores: async() => {
@@ -38,6 +39,21 @@ export default {
         await fetch(`${CHORES_URL}/${id}`, {
             method: 'DELETE'
         });
+    },
+
+    uploadImage: async(image: File) => {
+        const formData = new FormData();
+        formData.append('image', image);
+        const request = await fetch(IMAGE_URL, {
+            method: 'POST',
+            body: formData,
+        });
+        const json = await request.json();
+        return json as ImageMetadataDto;
+    },
+
+    getImageUrl: (imageName: string) => {
+        return window.location.host + IMAGE_URL + imageName;
     }
 
 } as Gateway;

@@ -30,11 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import {useTemplateRef} from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import EditChoreModal from './EditChoreModal.vue';
-import type { EditChoreDto, StateApi } from './types';
-import { choreToEditChoreDto, emptyEditChoreDto } from './helpers';
+import type {EditChoreDto, StateApi} from './types';
+import {choreToEditChoreDto, emptyEditChoreDto} from './helpers';
 
 const { state } = defineProps<{
   state: StateApi;
@@ -46,12 +46,15 @@ function openEditChoreModal() {
   editChoreModal.value?.show(emptyEditChoreDto());
 }
 
-function modalSubmit(chore: EditChoreDto, id: number | null): void {
+async function modalSubmit(chore: EditChoreDto, file: File | undefined, id: number | null): Promise<void> {
+  if (file) {
+    chore.imageName = await state.uploadImage(file);
+  }
   if (id === null) {
-    state.createChore(chore);
+    await state.createChore(chore);
     return;
   }
-  state.editChore
+  await state.editChore(id, chore)
 }
 
 function deleteChore(id: number) {
@@ -132,32 +135,5 @@ header {
   color: white;
   border: none;
 }
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-content {
-  background: white;
-  padding: 1em;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 300px;
-}
-.modal-content input,
-.modal-content select {
-  width: 100%;
-  margin: 0.5em 0;
-  padding: 0.5em;
-}
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-}
+
 </style>

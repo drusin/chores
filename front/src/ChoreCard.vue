@@ -5,7 +5,7 @@
   >
     <div class="chore-content" @click="$emit('toggle')">
       <strong>{{ chore.title }}</strong>
-      <span class="due-date">{{ displayDate() }}</span>
+      <span class="due-date" v-show="!chore.done">{{ displayDate() }}</span>
       <button @click.stop="$emit('edit')">📑</button>
       <button @click.stop="$emit('delete')">🚮</button>
     </div>
