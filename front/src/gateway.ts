@@ -53,7 +53,7 @@ export default {
     },
 
     getImageUrl: (imageName: string) => {
-        return window.location.host + IMAGE_URL + imageName;
+        return location.protocol + '//' + window.location.host  + IMAGE_URL + imageName;
     }
 
 } as Gateway;

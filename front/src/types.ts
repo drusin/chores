@@ -3,7 +3,7 @@ export type ChoreDto = {
     assignedTo: string,
     title: string,
     plannedDate: string,
-    imageName: string,
+    imageName: string | null,
     doneDate: string | null,
     repeatsEveryWeeks: number,
     repeatsOnMonday: boolean,
@@ -17,10 +17,10 @@ export type ChoreDto = {
 };
 
 export type EditChoreDto = {
-    imageName: string;
     assignedTo: string,
     title: string,
     plannedDate: string,
+    imageName: string | null;
     repeatsEveryWeeks: number,
     repeatsOnMonday: boolean,
     repeatsOnTuesday: boolean,
@@ -37,21 +37,10 @@ export type ImageMetadataDto = {
 }
 
 export type Chore = {
-    id: number,
-    assignedTo: string,
-    title: string,
+    data: ChoreDto,
+    imageUrl: string | null
     plannedDate: Date,
-    imageName: string,
     doneDate: Date | null
-    repeatsEveryWeeks: number,
-    repeatsOnMonday: boolean,
-    repeatsOnTuesday: boolean,
-    repeatsOnWednesday: boolean,
-    repeatsOnThursday: boolean,
-    repeatsOnFriday: boolean,
-    repeatsOnSaturday: boolean,
-    repeatsOnSunday: boolean,
-    done: boolean,
     status: string
 };
 

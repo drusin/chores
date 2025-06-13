@@ -16,18 +16,21 @@ type Internals = {
 
 async function refreshChores(internals: Internals) {
     const choreDtos = await internals.gateway.getChores();
-    internals.state.value.chores = choreDtos.map(fromDto);
+    internals.state.value.chores = choreDtos.map(c => fromDto(c, internals.gateway));
     sortChores(internals);
 }
 
-function fromDto(dto: ChoreDto): Chore {
+function fromDto(dto: ChoreDto, gateway: Gateway): Chore {
     const plannedDate = normalizeDate(new Date(dto.plannedDate));
+    const doneDate = dto.doneDate ? normalizeDate(new Date(dto.doneDate)) : null;
     const done = dto.done;
-    return Object.assign({}, dto, {
-        plannedDate: plannedDate,
-        doneDate: dto.doneDate ? normalizeDate(new Date(dto.doneDate)) : null,
+    return {
+        data: dto,
+        imageUrl: dto.imageName ? gateway.getImageUrl(dto.imageName) : null,
+        doneDate,
+        plannedDate,
         get status() { return statusGetter(done, plannedDate); }
-    });
+    };
 }
 
 function statusGetter(done: boolean, plannedDate: Date) {
@@ -45,7 +48,7 @@ function statusGetter(done: boolean, plannedDate: Date) {
 }
 
 function choresFor(internals: Internals, name: string) {
-    return internals.state.value.chores.filter(chore => chore.assignedTo === name);
+    return internals.state.value.chores.filter(chore => chore.data.assignedTo === name);
 }
 
 async function createChore(internals: Internals, newChore: EditChoreDto) {
@@ -69,15 +72,15 @@ function sortChores(internals: Internals) {
 }
 
 async function toggleChore(internals: Internals, id: number) {
-    const chore = internals.state.value.chores.find(c => c.id === id);
+    const chore = internals.state.value.chores.find(c => c.data.id === id);
     if (!chore) {
         return;
     }
-    const dto: EditChoreDto = Object.assign({}, chore, {
-        done: !chore.done,
+    const dto: EditChoreDto = Object.assign({}, chore.data, {
+        done: !chore.data.done,
         plannedDate: chore.plannedDate.toISOString()
     });
-    await internals.gateway.editChore(chore.id, dto);
+    await internals.gateway.editChore(chore.data.id, dto);
     await refreshChores(internals);
 }
 

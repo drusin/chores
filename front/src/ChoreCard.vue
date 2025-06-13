@@ -4,8 +4,9 @@
     :class="chore.status"
   >
     <div class="chore-content" @click="$emit('toggle')">
-      <strong>{{ chore.title }}</strong>
-      <span class="due-date" v-show="!chore.done">{{ displayDate() }}</span>
+      <strong>{{ chore.data.title }}</strong>
+      <span class="due-date" v-show="!chore.data.done">{{ displayDate() }}</span>
+      <img v-if="chore.imageUrl" :src="chore.imageUrl" class="chore-image">
       <button @click.stop="$emit('edit')">📑</button>
       <button @click.stop="$emit('delete')">🚮</button>
     </div>

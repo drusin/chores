@@ -109,7 +109,7 @@ function fileSelected(e: Event) {
 
 </script>
 
-<style>
+<style scoped>
 .modal {
   position: fixed;
   top: 0;

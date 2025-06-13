@@ -15,9 +15,9 @@
             v-for="(chore, idx) in state.choresFor(person)"
             :key="idx"
             :chore="chore"
-            @toggle="state.toggleChore(chore.id)"
-            @edit="editChore(chore.id)"
-            @delete="deleteChore(chore.id)"
+            @toggle="state.toggleChore(chore.data.id)"
+            @edit="editChore(chore.data.id)"
+            @delete="deleteChore(chore.data.id)"
           />
         </ul>
       </div>
@@ -30,11 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import {useTemplateRef} from 'vue';
+import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import EditChoreModal from './EditChoreModal.vue';
-import type {EditChoreDto, StateApi} from './types';
-import {choreToEditChoreDto, emptyEditChoreDto} from './helpers';
+import type { EditChoreDto, StateApi } from './types';
+import { choreToEditChoreDto, emptyEditChoreDto } from './helpers';
 
 const { state } = defineProps<{
   state: StateApi;
@@ -64,7 +64,7 @@ function deleteChore(id: number) {
 }
 
 function editChore(id: number) {
-  const chore = state.chores.find(chore => chore.id === id);
+  const chore = state.chores.find(chore => chore.data.id === id);
   if (!chore) {
     console.error('Chore not found:', id);
     return;
