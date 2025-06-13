@@ -7,7 +7,7 @@
         <option v-for="user in users" :key="user">{{ user }}</option>
       </select>
       <input type="date" v-model="dateModel" />
-      <img v-if="!!file" :src="imagePreview" />
+      <img v-if="!!imagePreview" :src="imagePreview" />
       <input type="file" @change="fileSelected">
 
       <!-- Repetition UI -->
@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, type Ref, watch} from 'vue';
-import type { EditChoreDto } from './types';
+import { ref, computed, type Ref, watch } from 'vue';
+import type { Chore, EditChoreDto } from './types';
 import { emptyEditChoreDto } from "./helpers.ts";
 
 defineProps<{
@@ -71,24 +71,21 @@ const dateModel = computed({
   }
 });
 
-watch([choreModel, file], ([newModel, newFile]) => {
-  if (!!newFile) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      imagePreview.value = e?.target?.result as string | undefined; // base64 data URL
-    };
-    reader.readAsDataURL(newFile);
+watch(file, (newFile) => {
+  if (!newFile) {
     return;
   }
-  if (!newModel.imageName) {
-    imagePreview.value = undefined;
-  }
-  imagePreview.value = newModel.imageName;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imagePreview.value = e?.target?.result as string | undefined; // base64 data URL
+  };
+  reader.readAsDataURL(newFile);
 })
 
-function show(model: EditChoreDto, id: number | null = null) {
+function show(model: Chore, id: number | null = null) {
   currentId = id;
-  choreModel.value = model;
+  choreModel.value = model.data;
+  imagePreview.value = model.imageUrl || undefined;
   file.value = undefined;
   showForm.value = true;
 }

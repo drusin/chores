@@ -34,7 +34,7 @@ import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import EditChoreModal from './EditChoreModal.vue';
 import type { EditChoreDto, StateApi } from './types';
-import { choreToEditChoreDto, emptyEditChoreDto } from './helpers';
+import { emptyEditChoreDto } from './helpers';
 
 const { state } = defineProps<{
   state: StateApi;
@@ -69,7 +69,7 @@ function editChore(id: number) {
     console.error('Chore not found:', id);
     return;
   }
-  editChoreModal.value?.show(choreToEditChoreDto(chore), id);
+  editChoreModal.value?.show(chore, id);
 }
 
 function getProfilePic(person: string): string {
