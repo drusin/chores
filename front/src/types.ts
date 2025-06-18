@@ -1,3 +1,6 @@
+import gateway from "./gateway.ts";
+import state from "./state.ts";
+
 export type ChoreDto = {
     id: number,
     assignedTo: string,
@@ -44,27 +47,6 @@ export type Chore = {
     status: string
 };
 
-export type State = {
-    chores: Chore[],
-    users: string[]
-};
+export type Gateway = ReturnType<() => typeof gateway>;
 
-export type Gateway = {
-    getChores: () => Promise<ChoreDto[]>;
-    createChore: (chore: EditChoreDto) => Promise<ChoreDto>;
-    editChore: (id: number, chore: EditChoreDto) => Promise<ChoreDto>;
-    deleteChore: (id: number) => Promise<void>;
-    uploadImage: (image: File) => Promise<ImageMetadataDto>;
-    getImageUrl: (imageName: string) => string;
-};
-
-export type StateApi = {
-    chores: Chore[];
-    users: string[];
-    choresFor: (name: string) => Chore[];
-    createChore: (newChore: EditChoreDto) => Promise<void>;
-    toggleChore: (id: number) => Promise<void>;
-    deleteChore: (id: number) => Promise<void>;
-    editChore: (id: number, chore: EditChoreDto) => Promise<void>;
-    uploadImage: (image: File) => Promise<string>;
-};
+export type StateApi = ReturnType<typeof state>;

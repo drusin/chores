@@ -8,8 +8,8 @@
       <span class="due-date" v-show="!chore.data.done">{{ displayDate() }}</span>
       <img v-if="chore.imageUrl" :src="chore.imageUrl" class="chore-image">
       <div class="button-row">
-        <button @click.stop="$emit('edit')"><img src="/public/editing.png" width="25" height="25" /></button>
-        <button @click.stop="$emit('delete')"><img src="/public/recycle-bin.png" width="25" height="25" /></button>
+        <button @click.stop="$emit('edit')"><img src="/editing.png" width="25" height="25" /></button>
+        <button @click.stop="$emit('delete')"><img src="/recycle-bin.png" width="25" height="25" /></button>
       </div>
     </div>
   </li>

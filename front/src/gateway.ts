@@ -1,4 +1,4 @@
-import type {ChoreDto, EditChoreDto, Gateway, ImageMetadataDto} from './types';
+import type { ChoreDto, EditChoreDto, ImageMetadataDto } from './types';
 
 const API_URL = '/api/'
 const CHORES_URL = API_URL + 'chores/';
@@ -56,4 +56,4 @@ export default {
         return location.protocol + '//' + window.location.host  + IMAGE_URL + imageName;
     }
 
-} as Gateway;
+};

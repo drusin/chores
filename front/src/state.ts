@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue';
-import type { Chore, ChoreDto, EditChoreDto, Gateway, State, StateApi } from './types';
+import type { Chore, ChoreDto, EditChoreDto, Gateway } from './types';
 import { normalizeDate } from './helpers';
 
 export const ChoreStatus = {
@@ -7,6 +7,11 @@ export const ChoreStatus = {
     DUE: 'due',
     OVERDUE: 'overdue',
     DONE: 'done'
+};
+
+type State = {
+    chores: Chore[],
+    users: string[]
 };
 
 type Internals = {
@@ -99,7 +104,7 @@ async function uploadImage(internals: Internals, image: File) {
     return name;
 }
 
-export default function (gateway: Gateway): StateApi {
+export default function (gateway: Gateway) {
     const state: Ref<State> = ref({ 
         chores: [],
         users: [ 'Alex', 'Dawid', 'Vincent' ]
