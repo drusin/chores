@@ -1,9 +1,9 @@
-import gateway from "./gateway.ts";
-import state from "./state.ts";
+import gateway from "./state/gateway.ts";
+import state from "./state/state.ts";
 
 export type ChoreDto = {
     id: number,
-    assignedTo: string,
+    assignedTo: number,
     title: string,
     plannedDate: string,
     imageName: string | null,
@@ -20,7 +20,7 @@ export type ChoreDto = {
 };
 
 export type EditChoreDto = {
-    assignedTo: string,
+    assignedTo: number,
     title: string,
     plannedDate: string,
     imageName: string | null;

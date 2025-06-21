@@ -5,14 +5,14 @@
     </header>
 
     <main class="lanes">
-      <div class="lane" v-for="person in state.users" :key="person">
+      <div class="lane" v-for="person in state.users" :key="person.data.id">
         <div class="lane-header">
-          <img :src="getProfilePic(person)" alt="Profile" class="profile-pic" />
-          <h2>{{ person }}</h2>
+          <img :src="person.imageUrl" alt="Profile" class="profile-pic" />
+          <h2>{{ person.data.name }}</h2>
         </div>
         <ul class="chore-list">
           <ChoreCard
-            v-for="(chore, idx) in state.choresFor(person)"
+            v-for="(chore, idx) in state.choresFor(person.data.id)"
             :key="idx"
             :chore="chore"
             @toggle="state.toggleChore(chore.data.id)"
@@ -22,7 +22,7 @@
         </ul>
       </div>
       <div class="button-row">
-        <button class="edit-btn" @click="openEditChoreModal"><img src="/editing.png" width="25" height="25" /></button>
+        <button class="edit-btn" @click="openUserManagementModal"><img src="/editing.png" width="25" height="25" /></button>
         <button class="add-btn" @click="openEditChoreModal">+</button>
       </div>
     </main>
@@ -36,13 +36,12 @@
 import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import EditChoreModal from './EditChoreModal.vue';
-import type { EditChoreDto, StateApi } from './types';
+import type { EditChoreDto } from './types';
 import { emptyEditChoreDto } from './helpers';
 import UserManagerModal from "./UserManagerModal.vue";
+import { getState } from "./state/statePlugin.ts";
 
-const { state } = defineProps<{
-  state: StateApi;
-}>();
+const state = getState();
 
 const userManagementModal = useTemplateRef('user-management-modal');
 const editChoreModal = useTemplateRef('edit-chore-modal');
@@ -93,7 +92,7 @@ function getProfilePic(person: string): string {
 
 </script>
 
-<style>
+<style scoped>
 .container {
   font-family: sans-serif;
   padding: 1em;

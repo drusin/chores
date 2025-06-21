@@ -1,5 +1,6 @@
 package xyz.rusin.choretracker.chores;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import xyz.rusin.choretracker.users.UserEntity;
@@ -9,7 +10,10 @@ import java.util.Date;
 @Entity
 @Data
 public class ChoreEntity {
-    private @Id @GeneratedValue Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String title;
     private Date plannedDate;
     private Date doneDate;
@@ -24,7 +28,8 @@ public class ChoreEntity {
     private boolean repeatsOnSunday;
     private boolean done;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIdentityReference(alwaysAsId = true)
     private UserEntity assignedTo;
 
     public static ChoreEntity from(EditChoreDto chore, UserEntity assignee) {

@@ -1,4 +1,4 @@
-import type {ChoreDto, EditChoreDto, ImageMetadataDto, UserDto} from './types';
+import type {ChoreDto, EditChoreDto, ImageMetadataDto, UserDto} from '../types.ts';
 
 const API_URL = '/api/'
 const CHORES_URL = API_URL + 'chores/';

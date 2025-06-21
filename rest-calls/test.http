@@ -1,24 +1,23 @@
 @address = http://localhost:8080/api
-@users_address = {{address}}/users
+@chores_address = {{address}}/chores/
+@users_address = {{address}}/users/
 
 ### Get chores
-GET {{address}}/chores/
+GET {{chores_address}}
 
 ### Create chore
-POST {{address}}/
+POST {{chores_address}}/
 Content-Type: application/json
 
 {
-    "assignedTo": "Dawid",
+    "assigneeId": 1,
     "title": "Müll wegbringen",
-    "date": "2025-05-17",
-    "repeatsInDays": 0,
-    "done": false
+    "plannedDate": "2025-05-17"
 }
 
 ### Update chore
 @id = 3152
-PUT {{address}}/{{id}}
+PUT {{chores_address}}/{{id}}
 Content-Type: application/json
 
 {
@@ -30,4 +29,12 @@ Content-Type: application/json
 }
 
 ### Get users
-GET {{users_address}}//
+GET {{users_address}}
+
+### Create user
+POST {{users_address}}
+Content-Type: application/json
+
+{
+  "name": "Dawid"
+}

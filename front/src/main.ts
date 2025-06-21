@@ -1,7 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
-import gateway from './gateway';
-import createState from './state';
+import gateway from './state/gateway.ts';
+import statePlugin from "./state/statePlugin.ts";
 
-createApp(App, { state: createState(gateway) }).mount('#app')
+const app = createApp(App);
+app.use(statePlugin, gateway);
+app.mount('#app')

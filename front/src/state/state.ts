@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue';
-import type {Chore, ChoreDto, EditChoreDto, Gateway, User, UserDto} from './types';
-import { normalizeDate } from './helpers';
+import type {Chore, ChoreDto, EditChoreDto, Gateway, User, UserDto} from '../types.ts';
+import { normalizeDate } from '../helpers.ts';
 
 export const ChoreStatus = {
     PLANNED: 'planned',
@@ -66,8 +66,8 @@ function statusGetter(done: boolean, plannedDate: Date) {
     return ChoreStatus.PLANNED;
 }
 
-function choresFor(internals: Internals, name: string) {
-    return internals.state.value.chores.filter(chore => chore.data.assignedTo === name);
+function choresFor(internals: Internals, assigneeId: number) {
+    return internals.state.value.chores.filter(chore => chore.data.assignedTo === assigneeId);
 }
 
 async function createChore(internals: Internals, newChore: EditChoreDto) {
@@ -129,7 +129,7 @@ export default function (gateway: Gateway) {
     return {
         get chores() { return state.value.chores; },
         get users() { return state.value.users; },
-        choresFor: (name: string) => choresFor(internals, name),
+        choresFor: (assigneeId: number) => choresFor(internals, assigneeId),
         createChore: (newChore: EditChoreDto) => createChore(internals, newChore),
         toggleChore: (id: number) => toggleChore(internals, id),
         deleteChore: (id: number) => deleteChore(internals, id),
