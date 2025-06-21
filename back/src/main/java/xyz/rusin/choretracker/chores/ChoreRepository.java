@@ -1,4 +1,4 @@
-package xyz.rusin.choretracker;
+package xyz.rusin.choretracker.chores;
 
 import org.springframework.data.repository.CrudRepository;
 

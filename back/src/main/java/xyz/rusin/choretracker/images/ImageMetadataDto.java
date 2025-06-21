@@ -1,3 +1,3 @@
-package xyz.rusin.choretracker;
+package xyz.rusin.choretracker.images;
 
 public record ImageMetadataDto (String name) { }

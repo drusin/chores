@@ -1,5 +1,7 @@
 package xyz.rusin.choretracker;
 
+import xyz.rusin.choretracker.chores.EditChoreDto;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;

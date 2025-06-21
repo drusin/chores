@@ -21,11 +21,14 @@
           />
         </ul>
       </div>
+      <div class="button-row">
+        <button class="edit-btn" @click="openEditChoreModal"><img src="/editing.png" width="25" height="25" /></button>
+        <button class="add-btn" @click="openEditChoreModal">+</button>
+      </div>
     </main>
 
-    <button class="add-btn" @click="openEditChoreModal">+</button>
-    
-    <EditChoreModal ref="edit-chore-modal" :users="state.users" @submit="modalSubmit" />
+    <UserManagerModal ref="user-management-modal" @submit="editChoreSubmit" />
+    <EditChoreModal ref="edit-chore-modal" :users="state.users" @submit="editChoreSubmit" />
   </div>
 </template>
 
@@ -35,18 +38,24 @@ import ChoreCard from './ChoreCard.vue';
 import EditChoreModal from './EditChoreModal.vue';
 import type { EditChoreDto, StateApi } from './types';
 import { emptyEditChoreDto } from './helpers';
+import UserManagerModal from "./UserManagerModal.vue";
 
 const { state } = defineProps<{
   state: StateApi;
 }>();
 
+const userManagementModal = useTemplateRef('user-management-modal');
 const editChoreModal = useTemplateRef('edit-chore-modal');
+
+function openUserManagementModal() {
+  userManagementModal.value?.show(state.users);
+}
 
 function openEditChoreModal() {
   editChoreModal.value?.show(emptyEditChoreDto());
 }
 
-async function modalSubmit(chore: EditChoreDto, file: File | undefined, id: number | null): Promise<void> {
+async function editChoreSubmit(chore: EditChoreDto, file: File | undefined, id: number | null): Promise<void> {
   if (file) {
     chore.imageName = await state.uploadImage(file);
   }
@@ -123,17 +132,39 @@ header {
   list-style: none;
   padding: 0;
 }
-.add-btn {
+
+.button-row {
   position: fixed;
-  right: 1em;
-  bottom: 1em;
-  width: 3em;
-  height: 3em;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  pointer-events: none; /* prevents overlap issues with other content */
+  z-index: 10;
+}
+
+.button-row button {
+  pointer-events: auto; /* re-enable interaction */
+}
+
+
+.edit-btn, .add-btn {
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
-  font-size: 2em;
+  border: none;
   background: #007bff;
   color: white;
-  border: none;
+  font-size: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+
 }
+
 
 </style>

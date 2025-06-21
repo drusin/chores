@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { ref, computed, type Ref, watch } from 'vue';
-import type { Chore, EditChoreDto } from './types';
+import type { EditChoreDto } from './types';
 import { emptyEditChoreDto } from "./helpers.ts";
 
 defineProps<{

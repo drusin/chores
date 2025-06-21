@@ -1,4 +1,4 @@
-package xyz.rusin.choretracker;
+package xyz.rusin.choretracker.images;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

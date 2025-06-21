@@ -16,7 +16,7 @@ export type ChoreDto = {
     repeatsOnFriday: boolean,
     repeatsOnSaturday: boolean,
     repeatsOnSunday: boolean,
-    done: boolean
+    done: boolean,
 };
 
 export type EditChoreDto = {
@@ -32,7 +32,7 @@ export type EditChoreDto = {
     repeatsOnFriday: boolean,
     repeatsOnSaturday: boolean,
     repeatsOnSunday: boolean,
-    done: boolean
+    done: boolean,
 };
 
 export type ImageMetadataDto = {
@@ -41,11 +41,27 @@ export type ImageMetadataDto = {
 
 export type Chore = {
     data: ChoreDto,
-    imageUrl: string | null
+    imageUrl: string | null,
     plannedDate: Date,
-    doneDate: Date | null
-    status: string
+    doneDate: Date | null,
+    status: string,
 };
+
+export type UserDto = {
+    id: number,
+    name: string,
+    imageName: string,
+}
+
+export type EditUserDto = {
+    name: string,
+    imageName: string,
+}
+
+export type User = {
+    data: UserDto,
+    imageUrl: string,
+}
 
 export type Gateway = ReturnType<() => typeof gateway>;
 

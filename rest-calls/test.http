@@ -1,7 +1,8 @@
 @address = http://localhost:8080/api
+@users_address = {{address}}/users
 
 ### Get chores
-GET {{address}}/
+GET {{address}}/chores/
 
 ### Create chore
 POST {{address}}/
@@ -27,3 +28,6 @@ Content-Type: application/json
     "repeatsInDays": 5,
     "done": true
 }
+
+### Get users
+GET {{users_address}}//

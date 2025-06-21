@@ -1,4 +1,4 @@
-package xyz.rusin.choretracker;
+package xyz.rusin.choretracker.chores;
 
 import java.util.Date;
 
@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record EditChoreDto (
-    String assignedTo,
+    long assigneeId,
     String title,
     Date plannedDate,
     String imageName,

@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue';
-import type { Chore, ChoreDto, EditChoreDto, Gateway } from './types';
+import type {Chore, ChoreDto, EditChoreDto, Gateway, User, UserDto} from './types';
 import { normalizeDate } from './helpers';
 
 export const ChoreStatus = {
@@ -11,7 +11,7 @@ export const ChoreStatus = {
 
 type State = {
     chores: Chore[],
-    users: string[]
+    users: User[]
 };
 
 type Internals = {
@@ -23,6 +23,20 @@ async function refreshChores(internals: Internals) {
     const choreDtos = await internals.gateway.getChores();
     internals.state.value.chores = choreDtos.map(c => fromDto(c, internals.gateway));
     sortChores(internals);
+}
+
+async function refreshUsers(internals: Internals) {
+    const userDtos = await internals.gateway.getUsers();
+    const users: User[] = userDtos.map(dto => userFromDto(dto, internals.gateway));
+    users.sort((left, right) => left.data.name.localeCompare(right.data.name));
+    internals.state.value.users = users;
+}
+
+function userFromDto(dto: UserDto, gateway: Gateway) {
+    return {
+        data: dto,
+        imageUrl: gateway.getImageUrl(dto.imageName),
+    } as User;
 }
 
 function fromDto(dto: ChoreDto, gateway: Gateway): Chore {
@@ -107,10 +121,11 @@ async function uploadImage(internals: Internals, image: File) {
 export default function (gateway: Gateway) {
     const state: Ref<State> = ref({ 
         chores: [],
-        users: [ 'Alex', 'Dawid', 'Vincent' ]
+        users: [],
     });
     const internals: Internals = { state, gateway };
     refreshChores(internals);
+    refreshUsers(internals);
     return {
         get chores() { return state.value.chores; },
         get users() { return state.value.users; },

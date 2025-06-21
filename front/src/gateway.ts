@@ -1,8 +1,9 @@
-import type { ChoreDto, EditChoreDto, ImageMetadataDto } from './types';
+import type {ChoreDto, EditChoreDto, ImageMetadataDto, UserDto} from './types';
 
 const API_URL = '/api/'
 const CHORES_URL = API_URL + 'chores/';
 const IMAGE_URL = API_URL + 'images/';
+const USERS_URL = API_URL + 'users/';
 
 export default {
     getChores: async() => {
@@ -54,6 +55,12 @@ export default {
 
     getImageUrl: (imageName: string) => {
         return location.protocol + '//' + window.location.host  + IMAGE_URL + imageName;
-    }
+    },
+
+    getUsers: async () => {
+        const request = await fetch(USERS_URL);
+        const json = await request.json();
+        return json as UserDto[];
+    },
 
 };

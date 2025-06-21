@@ -1,4 +1,13 @@
-package xyz.rusin.choretracker;
+package xyz.rusin.choretracker.chores;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import xyz.rusin.choretracker.Helpers;
+import xyz.rusin.choretracker.users.UserEntity;
+import xyz.rusin.choretracker.users.UserRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -10,19 +19,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/chores")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChoreApi {
     
     private final ChoreRepository repository;
+    private final UserRepository userRepository;
 
 	@GetMapping(path = "/") 
     public List<ChoreEntity> getChores() {
@@ -34,7 +37,9 @@ public class ChoreApi {
     @PostMapping(path = "/")
     public ChoreEntity createChore(@RequestBody EditChoreDto newChore) {
         System.out.println("Creating chore: " + newChore);
-        return repository.save(ChoreEntity.from(newChore));
+        UserEntity user = userRepository.findById(newChore.assigneeId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", newChore.assigneeId())));
+        return repository.save(ChoreEntity.from(newChore, user));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -48,16 +53,18 @@ public class ChoreApi {
     public ChoreEntity updateChore(@PathVariable Long id, @RequestBody EditChoreDto update) {
         ChoreEntity chore = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Chore with id %d was not found", id)));
         System.out.println("Updating chore: " + chore + " with update: " + update);
-        if (!chore.done && update.done()) {
-            chore.doneDate = new Date();
+        if (!chore.isDone() && update.done()) {
+            chore.setDoneDate(new Date());
             if (update.repeatsEveryWeeks() > 0) {
                 createRecurring(update);
             }
         }
-        if (chore.done && !update.done()) {
-            chore.doneDate = null;
+        if (chore.isDone() && !update.done()) {
+            chore.setDoneDate(null);
         }
-        chore.update(update);
+        UserEntity user = userRepository.findById(update.assigneeId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", update.assigneeId())));
+        chore.update(update, user);
         return repository.save(chore);
     }
 
