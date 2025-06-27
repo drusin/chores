@@ -5,7 +5,7 @@
     </header>
 
     <main class="lanes">
-      <div class="lane" v-for="person in state.users" :key="person.data.id">
+      <div class="lane" v-for="person in state.users.value" :key="person.data.id">
         <div class="lane-header">
           <img :src="person.imageUrl" alt="Profile" class="profile-pic" />
           <h2>{{ person.data.name }}</h2>
@@ -27,8 +27,8 @@
       </div>
     </main>
 
-    <UserManagerModal ref="user-management-modal" @submit="editChoreSubmit" />
-    <EditChoreModal ref="edit-chore-modal" :users="state.users" @submit="editChoreSubmit" />
+    <UserManagerModal ref="user-management-modal" />
+    <EditChoreModal ref="edit-chore-modal" />
   </div>
 </template>
 
@@ -36,7 +36,6 @@
 import { useTemplateRef } from 'vue';
 import ChoreCard from './ChoreCard.vue';
 import EditChoreModal from './EditChoreModal.vue';
-import type { EditChoreDto } from './types';
 import { emptyEditChoreDto } from './helpers';
 import UserManagerModal from "./UserManagerModal.vue";
 import { getState } from "./state/statePlugin.ts";
@@ -47,22 +46,11 @@ const userManagementModal = useTemplateRef('user-management-modal');
 const editChoreModal = useTemplateRef('edit-chore-modal');
 
 function openUserManagementModal() {
-  userManagementModal.value?.show(state.users);
+  userManagementModal.value?.show(state.users.value);
 }
 
 function openEditChoreModal() {
   editChoreModal.value?.show(emptyEditChoreDto());
-}
-
-async function editChoreSubmit(chore: EditChoreDto, file: File | undefined, id: number | null): Promise<void> {
-  if (file) {
-    chore.imageName = await state.uploadImage(file);
-  }
-  if (id === null) {
-    await state.createChore(chore);
-    return;
-  }
-  await state.editChore(id, chore)
 }
 
 function deleteChore(id: number) {
@@ -72,22 +60,12 @@ function deleteChore(id: number) {
 }
 
 function editChore(id: number) {
-  const chore = state.chores.find(chore => chore.data.id === id);
+  const chore = state.chores.value.find(chore => chore.data.id === id);
   if (!chore) {
     console.error('Chore not found:', id);
     return;
   }
   editChoreModal.value?.show(chore.data, chore.imageUrl, id);
-}
-
-function getProfilePic(person: string): string {
-  const map = new Map<string, string>([
-    ['Dawid', 'https://picsum.photos/seed/dad/40/40'],
-    ['Alex', 'https://picsum.photos/seed/mom/40/40'],
-    ['Vincent', 'https://picsum.photos/seed/son/40/40']
-  ]);
-
-  return map.get(person) ||'';
 }
 
 </script>

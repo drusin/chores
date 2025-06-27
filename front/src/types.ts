@@ -1,25 +1,12 @@
 import gateway from "./state/gateway.ts";
 import state from "./state/state.ts";
 
-export type ChoreDto = {
+export interface ChoreDto extends EditChoreDto {
     id: number,
-    assignedTo: number,
-    title: string,
-    plannedDate: string,
-    imageName: string | null,
     doneDate: string | null,
-    repeatsEveryWeeks: number,
-    repeatsOnMonday: boolean,
-    repeatsOnTuesday: boolean,
-    repeatsOnWednesday: boolean,
-    repeatsOnThursday: boolean,
-    repeatsOnFriday: boolean,
-    repeatsOnSaturday: boolean,
-    repeatsOnSunday: boolean,
-    done: boolean,
-};
+}
 
-export type EditChoreDto = {
+export interface EditChoreDto {
     assignedTo: number,
     title: string,
     plannedDate: string,
@@ -33,7 +20,7 @@ export type EditChoreDto = {
     repeatsOnSaturday: boolean,
     repeatsOnSunday: boolean,
     done: boolean,
-};
+}
 
 export type ImageMetadataDto = {
     name: string,

@@ -37,8 +37,8 @@ public class ChoreApi {
     @PostMapping(path = "/")
     public ChoreEntity createChore(@RequestBody EditChoreDto newChore) {
         System.out.println("Creating chore: " + newChore);
-        UserEntity user = userRepository.findById(newChore.assigneeId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", newChore.assigneeId())));
+        UserEntity user = userRepository.findById(newChore.assignedTo())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", newChore.assignedTo())));
         return repository.save(ChoreEntity.from(newChore, user));
     }
 
@@ -62,8 +62,8 @@ public class ChoreApi {
         if (chore.isDone() && !update.done()) {
             chore.setDoneDate(null);
         }
-        UserEntity user = userRepository.findById(update.assigneeId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", update.assigneeId())));
+        UserEntity user = userRepository.findById(update.assignedTo())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", update.assignedTo())));
         chore.update(update, user);
         return repository.save(chore);
     }

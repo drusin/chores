@@ -10,18 +10,18 @@ export const ChoreStatus = {
 };
 
 type State = {
-    chores: Chore[],
-    users: User[]
+    chores: Ref<Chore[]>,
+    users: Ref<User[]>
 };
 
 type Internals = {
-    state: Ref<State>,
+    state: State,
     gateway: Gateway
 };
 
 async function refreshChores(internals: Internals) {
     const choreDtos = await internals.gateway.getChores();
-    internals.state.value.chores = choreDtos.map(c => fromDto(c, internals.gateway));
+    internals.state.chores.value = choreDtos.map(c => fromDto(c, internals.gateway));
     sortChores(internals);
 }
 
@@ -29,7 +29,7 @@ async function refreshUsers(internals: Internals) {
     const userDtos = await internals.gateway.getUsers();
     const users: User[] = userDtos.map(dto => userFromDto(dto, internals.gateway));
     users.sort((left, right) => left.data.name.localeCompare(right.data.name));
-    internals.state.value.users = users;
+    internals.state.users.value = users;
 }
 
 function userFromDto(dto: UserDto, gateway: Gateway) {
@@ -67,7 +67,7 @@ function statusGetter(done: boolean, plannedDate: Date) {
 }
 
 function choresFor(internals: Internals, assigneeId: number) {
-    return internals.state.value.chores.filter(chore => chore.data.assignedTo === assigneeId);
+    return internals.state.chores.value.filter(chore => chore.data.assignedTo === assigneeId);
 }
 
 async function createChore(internals: Internals, newChore: EditChoreDto) {
@@ -76,7 +76,7 @@ async function createChore(internals: Internals, newChore: EditChoreDto) {
 }
 
 function sortChores(internals: Internals) {
-    internals.state.value.chores.sort((left, right) => {
+    internals.state.chores.value.sort((left, right) => {
         if (left.doneDate) {
             if (right.doneDate) {
                 return left.doneDate.getTime() - right.doneDate.getTime();
@@ -91,7 +91,7 @@ function sortChores(internals: Internals) {
 }
 
 async function toggleChore(internals: Internals, id: number) {
-    const chore = internals.state.value.chores.find(c => c.data.id === id);
+    const chore = internals.state.chores.value.find(c => c.data.id === id);
     if (!chore) {
         return;
     }
@@ -119,16 +119,16 @@ async function uploadImage(internals: Internals, image: File) {
 }
 
 export default function (gateway: Gateway) {
-    const state: Ref<State> = ref({ 
-        chores: [],
-        users: [],
-    });
+    const state: State = {
+        chores: ref([]),
+        users: ref([]),
+    };
     const internals: Internals = { state, gateway };
     refreshChores(internals);
     refreshUsers(internals);
     return {
-        get chores() { return state.value.chores; },
-        get users() { return state.value.users; },
+        get chores() { return state.chores; },
+        get users() { return state.users; },
         choresFor: (assigneeId: number) => choresFor(internals, assigneeId),
         createChore: (newChore: EditChoreDto) => createChore(internals, newChore),
         toggleChore: (id: number) => toggleChore(internals, id),

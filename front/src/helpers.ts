@@ -1,4 +1,4 @@
-import type {EditChoreDto, EditUserDto} from "./types";
+import type { EditChoreDto, EditUserDto } from "./types";
 
 export function normalizeDate(date: Date) {
     const returnVal = new Date(date);
@@ -8,9 +8,10 @@ export function normalizeDate(date: Date) {
 
 export function emptyEditChoreDto() {
     return {
-        assignedTo: '',
+        assignedTo: -1,
         title: '',
         plannedDate: '',
+        imageName: '',
         repeatsEveryWeeks: 0,
         repeatsOnMonday: false,
         repeatsOnTuesday: false,
@@ -20,7 +21,7 @@ export function emptyEditChoreDto() {
         repeatsOnSaturday: false,
         repeatsOnSunday: false,
         done: false
-    } as EditChoreDto
+    } as EditChoreDto;
 }
 
 export function emptyEditUserDto() {

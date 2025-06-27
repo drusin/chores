@@ -4,7 +4,7 @@
       <h3>User Management</h3>
 
       <ul class="user-list">
-        <li v-for="user in users" :key="user.data.id">
+        <li v-for="user in state.users.value" :key="user.data.id">
           <img :src="user.imageUrl" class="avatar" />
           <input v-model="user.data.name" placeholder="Name" />
           <input v-model="user.imageUrl" placeholder="Profile picture URL" />
@@ -31,12 +31,15 @@
 import {ref, watch, defineEmits, type Ref} from 'vue';
 import type {EditUserDto, User} from './types';
 import {emptyEditUserDto} from "./helpers.ts";
+import {getState} from "./state/statePlugin.ts";
+
+const state = getState();
 
 // const props = defineProps<{
 //   users: User[];
 //   show: boolean;
 // }>();
-const users: Ref<User[]> = ref([]);
+// const users: Ref<User[]> = ref([]);
 const showForm = ref(false);
 
 const emit = defineEmits<{
@@ -49,7 +52,7 @@ defineExpose({
 });
 
 function show(usersToShow: User[]) {
-  users.value = usersToShow;
+  // users.value = usersToShow;
   showForm.value = true;
 }
 
@@ -62,8 +65,8 @@ const newUser = ref<EditUserDto>(emptyEditUserDto());
 
 function addUser() {
   if (!newUser.value.name) return;
-  users.value.push({ ...newUser.value, id: Date.now() });
-  newUser.value = { id: 0, name: '', avatarUrl: '' };
+  // users.value.push({ ...newUser.value, id: Date.now() });
+  newUser.value = { name: '', imageName: '' };
   emit('update-users', users.value);
 }
 

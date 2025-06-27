@@ -2,29 +2,33 @@
   <div class="modal" v-if="showForm">
     <div class="modal-content">
       <h3>{{ !!currentId ? 'Bearbeiten' : 'Neue Aufgabe' }}</h3>
-      <input v-model="choreModel.title" placeholder="Title" />
+      <input v-model="choreModel.title" placeholder="Title"/>
       <select v-model="choreModel.assignedTo">
-        <option v-for="user in users" :key="user">{{ user }}</option>
+        <option v-for="user in state.users.value" :key="user.data.id" :value="user.data.id">{{
+            user.data.name
+          }}
+        </option>
       </select>
-      <input type="date" v-model="dateModel" />
-      <img v-if="!!imagePreview" :src="imagePreview" />
-      <input type="file" @change="fileSelected">
+      <input type="date" v-model="dateModel"/>
+      <ImageUpload :current-preview="currentImagePreview" @old-image-removed="onOldImageRemoved"
+                   @new-image-selected="onNewImageSelected"
+                   @new-image-removed="onNewImageRemoved"/>
 
       <!-- Repetition UI -->
       <div>
         <label>
           Wiederholen alle
-          <input type="number" min="0" v-model.number="choreModel.repeatsEveryWeeks" style="width: 4em;" />
+          <input type="number" min="0" v-model.number="choreModel.repeatsEveryWeeks" style="width: 4em;"/>
           Wochen
         </label>
         <div v-show="choreModel.repeatsEveryWeeks > 0" style="margin-top: 0.5em;">
-          <label>Mo <input type="checkbox" v-model="choreModel.repeatsOnMonday" /></label>
-          <label>Di <input type="checkbox" v-model="choreModel.repeatsOnTuesday" /></label>
-          <label>Mi <input type="checkbox" v-model="choreModel.repeatsOnWednesday" /></label>
-          <label>Do <input type="checkbox" v-model="choreModel.repeatsOnThursday" /></label>
-          <label>Fr <input type="checkbox" v-model="choreModel.repeatsOnFriday" /></label>
-          <label>Sa <input type="checkbox" v-model="choreModel.repeatsOnSaturday" /></label>
-          <label>So <input type="checkbox" v-model="choreModel.repeatsOnSunday" /></label>
+          <label>Mo <input type="checkbox" v-model="choreModel.repeatsOnMonday"/></label>
+          <label>Di <input type="checkbox" v-model="choreModel.repeatsOnTuesday"/></label>
+          <label>Mi <input type="checkbox" v-model="choreModel.repeatsOnWednesday"/></label>
+          <label>Do <input type="checkbox" v-model="choreModel.repeatsOnThursday"/></label>
+          <label>Fr <input type="checkbox" v-model="choreModel.repeatsOnFriday"/></label>
+          <label>Sa <input type="checkbox" v-model="choreModel.repeatsOnSaturday"/></label>
+          <label>So <input type="checkbox" v-model="choreModel.repeatsOnSunday"/></label>
         </div>
       </div>
       <!-- End Repetition UI -->
@@ -41,25 +45,22 @@
 import { ref, computed, type Ref, watch } from 'vue';
 import type { EditChoreDto } from './types';
 import { emptyEditChoreDto } from "./helpers.ts";
+import { getState } from "./state/statePlugin.ts";
+import ImageUpload from "./ImageUpload.vue";
 
-defineProps<{
-  users: string[]
-}>();
+const state = getState();
 
 defineExpose({
   show,
   hide
 });
 
-const emit = defineEmits<{
-  submit: [ EditChoreDto, File | undefined, number | null ];
-}>();
-
 const showForm = ref(false);
-let choreModel = ref(emptyEditChoreDto());
+const choreModel = ref(emptyEditChoreDto());
+
+const currentImagePreview = ref<string | null>(null);
 let currentId: number | null = null;
-let file: Ref<File | undefined> = ref(undefined);
-const imagePreview: Ref<string | undefined> = ref(undefined);
+let newFile: File | null = null;
 
 const dateModel = computed({
   get: () => {
@@ -71,22 +72,11 @@ const dateModel = computed({
   }
 });
 
-watch(file, (newFile) => {
-  if (!newFile) {
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    imagePreview.value = e?.target?.result as string | undefined; // base64 data URL
-  };
-  reader.readAsDataURL(newFile);
-})
-
 function show(model: EditChoreDto, imageUrl: string | null = null, id: number | null = null) {
   currentId = id;
   choreModel.value = model;
-  imagePreview.value = imageUrl || undefined;
-  file.value = undefined;
+  currentImagePreview.value = imageUrl;
+  newFile = null;
   showForm.value = true;
 }
 
@@ -94,14 +84,29 @@ function hide() {
   showForm.value = false;
 }
 
-function submit() {
-  emit('submit', choreModel.value, file.value, currentId);
-  hide();
+function onOldImageRemoved() {
+  currentImagePreview.value = null;
+  choreModel.value.imageName = null;
 }
 
-function fileSelected(e: Event) {
-  const fileInput = e.target as HTMLInputElement;
-  file.value = fileInput?.files?.[0];
+function onNewImageSelected(file: File) {
+  newFile = file;
+}
+
+function onNewImageRemoved() {
+  newFile = null;
+}
+
+async function submit() {
+  if (newFile) {
+    choreModel.value.imageName = await state.uploadImage(newFile);
+  }
+  if (!!currentId) {
+    await state.editChore(currentId, choreModel.value);
+  } else {
+    await state.createChore(choreModel.value);
+  }
+  hide();
 }
 
 </script>
@@ -113,11 +118,12 @@ function fileSelected(e: Event) {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .modal-content {
   background: white;
   padding: 1em;
@@ -125,6 +131,7 @@ function fileSelected(e: Event) {
   width: 90%;
   max-width: 300px;
 }
+
 .modal-content input,
 .modal-content select {
   width: 100%;
@@ -132,10 +139,12 @@ function fileSelected(e: Event) {
   margin: 0.5em 0;
   padding: 0.5em;
 }
+
 .modal-actions {
   display: flex;
   justify-content: space-between;
 }
+
 img {
   max-width: 300px;
   max-height: 300px;
