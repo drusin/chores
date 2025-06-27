@@ -2,7 +2,8 @@
 import { computed, ref, type Ref, useTemplateRef, watch } from "vue";
 
 const { currentPreview } = defineProps<{
-  currentPreview: string | null
+  currentPreview: string | null,
+  maxPreviewHeight: number | null,
 }>();
 
 const emit = defineEmits<{
@@ -53,7 +54,8 @@ watch(file, (newFile) => {
 
 <template>
   <div class="image-preview-wrapper" v-if="!!imagePreview">
-    <img :src="imagePreview" />
+    <img :src="imagePreview" :style="maxPreviewHeight ? `max-height: ${maxPreviewHeight}px` : ''">
+
     <button class="remove-btn" @click="removeImage">×</button>
   </div>
   <input ref="file-input" type="file" @change="fileSelected">
@@ -63,14 +65,13 @@ watch(file, (newFile) => {
 .image-preview-wrapper {
   position: relative;
   display: inline-block;
-  max-width: 100%;
 }
 
 .image-preview-wrapper img {
-  max-width: 100%;
-  height: auto;
   display: block;
   border-radius: 6px;
+  max-width: 100%;
+  height: auto;
 }
 
 .remove-btn {

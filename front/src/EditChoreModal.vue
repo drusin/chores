@@ -1,66 +1,81 @@
 <template>
   <div class="modal" v-if="showForm">
     <div class="modal-content">
-      <h3>{{ !!currentId ? 'Bearbeiten' : 'Neue Aufgabe' }}</h3>
-      <input v-model="choreModel.title" placeholder="Title"/>
-      <select v-model="choreModel.assignedTo">
-        <option v-for="user in state.users.value" :key="user.data.id" :value="user.data.id">{{
-            user.data.name
-          }}
+      <h3>{{ isEditing ? 'Bearbeiten' : 'Neue Aufgabe' }}</h3>
+
+      <input class="full-width" v-model="choreModel.title" placeholder="Titel" />
+
+      <select class="full-width" v-model="choreModel.assignedTo">
+        <option
+            v-for="user in state.users.value"
+            :key="user.data.id"
+            :value="user.data.id"
+        >
+          {{ user.data.name }}
         </option>
       </select>
-      <input type="date" v-model="dateModel"/>
-      <ImageUpload :current-preview="currentImagePreview" @old-image-removed="onOldImageRemoved"
-                   @new-image-selected="onNewImageSelected"
-                   @new-image-removed="onNewImageRemoved"/>
 
-      <!-- Repetition UI -->
-      <div>
+      <input class="full-width" type="date" v-model="dateModel" />
+
+      <ImageUpload
+          :current-preview="currentImagePreview"
+          @old-image-removed="onOldImageRemoved"
+          @new-image-selected="onNewImageSelected"
+          @new-image-removed="onNewImageRemoved"
+      />
+
+      <!-- Repeating Chore Section -->
+      <div class="repeat-section">
         <label>
           Wiederholen alle
-          <input type="number" min="0" v-model.number="choreModel.repeatsEveryWeeks" style="width: 4em;"/>
+          <input
+              type="number"
+              min="0"
+              v-model.number="choreModel.repeatsEveryWeeks"
+              class="repeat-weeks-input full-width"
+          />
           Wochen
         </label>
-        <div v-show="choreModel.repeatsEveryWeeks > 0" style="margin-top: 0.5em;">
-          <label>Mo <input type="checkbox" v-model="choreModel.repeatsOnMonday"/></label>
-          <label>Di <input type="checkbox" v-model="choreModel.repeatsOnTuesday"/></label>
-          <label>Mi <input type="checkbox" v-model="choreModel.repeatsOnWednesday"/></label>
-          <label>Do <input type="checkbox" v-model="choreModel.repeatsOnThursday"/></label>
-          <label>Fr <input type="checkbox" v-model="choreModel.repeatsOnFriday"/></label>
-          <label>Sa <input type="checkbox" v-model="choreModel.repeatsOnSaturday"/></label>
-          <label>So <input type="checkbox" v-model="choreModel.repeatsOnSunday"/></label>
+
+        <div class="weekday-checkboxes" v-if="choreModel.repeatsEveryWeeks > 0">
+          <label><input type="checkbox" v-model="choreModel.repeatsOnMonday" /> Montag</label>
+          <label><input type="checkbox" v-model="choreModel.repeatsOnTuesday" /> Dienstag</label>
+          <label><input type="checkbox" v-model="choreModel.repeatsOnWednesday" /> Mittwoch</label>
+          <label><input type="checkbox" v-model="choreModel.repeatsOnThursday" /> Donnerstag</label>
+          <label><input type="checkbox" v-model="choreModel.repeatsOnFriday" /> Freitag</label>
+          <label><input type="checkbox" v-model="choreModel.repeatsOnSaturday" /> Samstag</label>
+          <label><input type="checkbox" v-model="choreModel.repeatsOnSunday" /> Sonntag</label>
         </div>
       </div>
-      <!-- End Repetition UI -->
 
+      <!-- Actions -->
       <div class="modal-actions">
-        <button @click="submit()">Save</button>
-        <button @click="hide()">Cancel</button>
+        <button @click="submit">Speichern</button>
+        <button @click="hide">Abbrechen</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, type Ref, watch } from 'vue';
+import { ref, computed } from 'vue';
 import type { EditChoreDto } from './types';
-import { emptyEditChoreDto } from "./helpers.ts";
-import { getState } from "./state/statePlugin.ts";
-import ImageUpload from "./ImageUpload.vue";
+import { emptyEditChoreDto } from './helpers';
+import { getState } from './state/statePlugin';
+import ImageUpload from './ImageUpload.vue';
 
 const state = getState();
 
-defineExpose({
-  show,
-  hide
-});
+defineExpose({ show, hide });
 
 const showForm = ref(false);
-const choreModel = ref(emptyEditChoreDto());
+const choreModel = ref<EditChoreDto>(emptyEditChoreDto());
 
 const currentImagePreview = ref<string | null>(null);
 let currentId: number | null = null;
 let newFile: File | null = null;
+
+const isEditing = computed(() => !!currentId);
 
 const dateModel = computed({
   get: () => {
@@ -74,7 +89,7 @@ const dateModel = computed({
 
 function show(model: EditChoreDto, imageUrl: string | null = null, id: number | null = null) {
   currentId = id;
-  choreModel.value = model;
+  choreModel.value = { ...model };
   currentImagePreview.value = imageUrl;
   newFile = null;
   showForm.value = true;
@@ -101,14 +116,15 @@ async function submit() {
   if (newFile) {
     choreModel.value.imageName = await state.uploadImage(newFile);
   }
-  if (!!currentId) {
+
+  if (currentId !== null) {
     await state.editChore(currentId, choreModel.value);
   } else {
     await state.createChore(choreModel.value);
   }
+
   hide();
 }
-
 </script>
 
 <style scoped>
@@ -129,24 +145,48 @@ async function submit() {
   padding: 1em;
   border-radius: 8px;
   width: 90%;
-  max-width: 300px;
+  max-width: 320px;
+  box-sizing: border-box;
 }
 
-.modal-content input,
-.modal-content select {
+.modal-content .full-width {
   width: 100%;
-  box-sizing: border-box;
   margin: 0.5em 0;
   padding: 0.5em;
+  box-sizing: border-box;
 }
 
 .modal-actions {
   display: flex;
   justify-content: space-between;
+  margin-top: 1em;
 }
 
-img {
-  max-width: 300px;
-  max-height: 300px;
+.repeat-section {
+  margin-top: 1em;
 }
+
+.repeat-weeks-input {
+  width: 4em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.weekday-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  margin-top: 0.5em;
+}
+
+.weekday-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 </style>

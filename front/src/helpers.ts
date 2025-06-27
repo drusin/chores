@@ -6,7 +6,7 @@ export function normalizeDate(date: Date) {
     return returnVal;
 }
 
-export function emptyEditChoreDto() {
+export function emptyEditChoreDto(): EditChoreDto {
     return {
         assignedTo: -1,
         title: '',
@@ -21,12 +21,12 @@ export function emptyEditChoreDto() {
         repeatsOnSaturday: false,
         repeatsOnSunday: false,
         done: false
-    } as EditChoreDto;
+    };
 }
 
-export function emptyEditUserDto() {
+export function emptyEditUserDto(): EditUserDto {
     return {
         name: '',
         imageName: '',
-    } as EditUserDto;
+    };
 }
