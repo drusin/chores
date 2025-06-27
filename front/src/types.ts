@@ -34,15 +34,13 @@ export type Chore = {
     status: string,
 };
 
-export type UserDto = {
+export interface UserDto extends EditUserDto {
     id: number,
-    name: string,
-    imageName: string,
 }
 
-export type EditUserDto = {
+export interface EditUserDto {
     name: string,
-    imageName: string,
+    imageName: string | null,
 }
 
 export type User = {

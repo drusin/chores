@@ -1,4 +1,4 @@
-import type {ChoreDto, EditChoreDto, ImageMetadataDto, UserDto} from '../types.ts';
+import type { ChoreDto, EditChoreDto, EditUserDto, ImageMetadataDto, UserDto } from '../types.ts';
 
 const API_URL = '/api/'
 const CHORES_URL = API_URL + 'chores/';
@@ -61,6 +61,18 @@ export default {
         const request = await fetch(USERS_URL);
         const json = await request.json();
         return json as UserDto[];
+    },
+
+    updateUser: async(id: number, user: EditUserDto) => {
+        const request = await fetch(`${USERS_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+        const json = await request.json();
+        return json as UserDto;
     },
 
 };

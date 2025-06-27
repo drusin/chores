@@ -28,7 +28,8 @@ public class UserApi {
     public UserEntity updateUser(@RequestBody EditUserDto editUserDto, @PathVariable Long id) {
         UserEntity entity = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", id)));
-        return entity.update(editUserDto);
+        entity.update(editUserDto);
+        return userRepository.save(entity);
     }
 
 }

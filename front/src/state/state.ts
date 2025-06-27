@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue';
-import type {Chore, ChoreDto, EditChoreDto, Gateway, User, UserDto} from '../types.ts';
+import type { Chore, ChoreDto, EditChoreDto, EditUserDto, Gateway, User, UserDto } from '../types.ts';
 import { normalizeDate } from '../helpers.ts';
 
 export const ChoreStatus = {
@@ -118,6 +118,11 @@ async function uploadImage(internals: Internals, image: File) {
     return name;
 }
 
+async function editUser(internals: Internals, id: number, user: EditUserDto) {
+    await internals.gateway.updateUser(id, user);
+    await refreshUsers(internals);
+}
+
 export default function (gateway: Gateway) {
     const state: State = {
         chores: ref([]),
@@ -134,6 +139,7 @@ export default function (gateway: Gateway) {
         toggleChore: (id: number) => toggleChore(internals, id),
         deleteChore: (id: number) => deleteChore(internals, id),
         editChore: (id: number, chore: EditChoreDto) => editChore(internals, id, chore),
+        editUser: (id: number, user: EditUserDto) => editUser(internals, id, user),
         uploadImage: (image: File) => uploadImage(internals, image),
     }
 }
