@@ -63,6 +63,18 @@ export default {
         return json as UserDto[];
     },
 
+    createUser: async(user: EditUserDto) => {
+        const request = await fetch(USERS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+        const json = await request.json();
+        return json as UserDto;
+    },
+
     updateUser: async(id: number, user: EditUserDto) => {
         const request = await fetch(`${USERS_URL}/${id}`, {
             method: 'PUT',
@@ -74,5 +86,11 @@ export default {
         const json = await request.json();
         return json as UserDto;
     },
+
+    deleteUser: async(id: number) => {
+        await fetch(`${USERS_URL}/${id}`, {
+            method: 'DELETE'
+        });
+    }
 
 };

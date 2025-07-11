@@ -32,4 +32,11 @@ public class UserApi {
         return userRepository.save(entity);
     }
 
+    @DeleteMapping(path = "/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        UserEntity entity = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d was not found", id)));
+        userRepository.delete(entity);
+    }
+
 }

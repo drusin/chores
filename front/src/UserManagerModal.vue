@@ -7,8 +7,8 @@
         <li v-for="user in users" :key="user.data.id" class="user-item">
           <div class="image-wrapper">
             <ImageUpload :current-preview="user.imageUrl" :max-preview-height="60"
-                         @old-image-removed="onOldImageRemoved(user.data.id)"
-                         @new-image-removed="onNewImageRemoved(user.data.id)"
+                         @old-image-removed="() => onOldImageRemoved(user.data.id)"
+                         @new-image-removed="() => onNewImageRemoved(user.data.id)"
                          @new-image-selected="(file) => onNewImageSelected(user.data.id, file)"
             />
           </div>
@@ -19,7 +19,7 @@
         </li>
       </ul>
       <hr/>
-      <h4>New User</h4>
+      <button @click="() => newUserModal?.show()">New user</button>
 
       <div class="modal-actions">
         <button @click="submit">Speichern</button>
@@ -27,24 +27,34 @@
       </div>
     </div>
   </div>
+
+  <NewUserModal ref="new-user-modal" @created="onNewUserCreated" />
 </template>
 
 <script setup lang="ts">
 import { getState } from "./state/statePlugin.ts";
 import ImageUpload from "./ImageUpload.vue";
-import { ref, computed } from "vue";
+import { type Ref, ref, useTemplateRef } from "vue";
+import NewUserModal from "./NewUserModal.vue";
+import type { User } from "./types.ts";
+import { clone } from "./helpers.ts";
 
 const state = getState();
 const showForm = ref(false);
-const users = ref([ ...state.users.value ]);
+const users: Ref<User[]> = ref([]);
 const newFiles = ref<(File | null)[]>([]);
+const newUserModal = useTemplateRef('new-user-modal');
 
 defineExpose({ show });
 
 function show() {
   showForm.value = true;
-  users.value = [ ...state.users.value ];
+  copyUsersFromState();
   newFiles.value = [];
+}
+
+function copyUsersFromState() {
+  users.value = clone(state.users.value);
 }
 
 function hide() {
@@ -55,6 +65,7 @@ function onOldImageRemoved(userId: number) {
   const i = users.value.findIndex((user) => user.data.id === userId);
   if (i) {
     users.value[i].data.imageName = null;
+    users.value[i].imageUrl = null;
   }
 }
 
@@ -77,10 +88,20 @@ async function submit() {
   hide();
 }
 
-// Stub for deleteUser function - implement your logic here
-function deleteUser(userId: number) {
-  // TODO: Implement user deletion logic, e.g., update state.users
-  console.log("Delete user with id:", userId);
+async function deleteUser(userId: number) {
+  if (confirm('Bist du sicher, dass du diesen Nutzer löschen möchtest?')) {
+    await state.deleteUser(userId);
+    copyUsersFromState();
+  }
+}
+
+async function onNewUserCreated(name: string, image: File | null) {
+  let imageName = null;
+  if (image) {
+    imageName = await state.uploadImage(image);
+  }
+  await state.createUser({ name, imageName });
+  copyUsersFromState();
 }
 </script>
 

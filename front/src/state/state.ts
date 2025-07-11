@@ -35,7 +35,7 @@ async function refreshUsers(internals: Internals) {
 function userFromDto(dto: UserDto, gateway: Gateway) {
     return {
         data: dto,
-        imageUrl: gateway.getImageUrl(dto.imageName),
+        imageUrl: dto.imageName ? gateway.getImageUrl(dto.imageName) : null,
     } as User;
 }
 
@@ -123,6 +123,16 @@ async function editUser(internals: Internals, id: number, user: EditUserDto) {
     await refreshUsers(internals);
 }
 
+async function deleteUser(internals: Internals, id: number) {
+    await internals.gateway.deleteUser(id);
+    await refreshUsers(internals);
+}
+
+async function createUser(internals: Internals, newUser: EditUserDto) {
+    await internals.gateway.createUser(newUser);
+    await refreshUsers(internals);
+}
+
 export default function (gateway: Gateway) {
     const state: State = {
         chores: ref([]),
@@ -139,7 +149,9 @@ export default function (gateway: Gateway) {
         toggleChore: (id: number) => toggleChore(internals, id),
         deleteChore: (id: number) => deleteChore(internals, id),
         editChore: (id: number, chore: EditChoreDto) => editChore(internals, id, chore),
+        createUser: (newUser: EditUserDto) => createUser(internals, newUser),
         editUser: (id: number, user: EditUserDto) => editUser(internals, id, user),
+        deleteUser: (id: number) => deleteUser(internals, id),
         uploadImage: (image: File) => uploadImage(internals, image),
     }
 }

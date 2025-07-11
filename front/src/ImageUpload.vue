@@ -1,3 +1,12 @@
+<template>
+  <div class="image-preview-wrapper" v-if="!!imagePreview">
+    <img :src="imagePreview" :style="maxPreviewHeight ? `max-height: ${maxPreviewHeight}px` : ''">
+
+    <button class="remove-btn" @click="removeImage">×</button>
+  </div>
+  <input ref="file-input" type="file" @change="fileSelected">
+</template>
+
 <script setup lang="ts">
 import { computed, ref, type Ref, useTemplateRef, watch } from "vue";
 
@@ -51,15 +60,6 @@ watch(file, (newFile) => {
   reader.readAsDataURL(newFile);
 });
 </script>
-
-<template>
-  <div class="image-preview-wrapper" v-if="!!imagePreview">
-    <img :src="imagePreview" :style="maxPreviewHeight ? `max-height: ${maxPreviewHeight}px` : ''">
-
-    <button class="remove-btn" @click="removeImage">×</button>
-  </div>
-  <input ref="file-input" type="file" @change="fileSelected">
-</template>
 
 <style scoped>
 .image-preview-wrapper {

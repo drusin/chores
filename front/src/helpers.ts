@@ -1,4 +1,4 @@
-import type { EditChoreDto, EditUserDto } from "./types";
+import type { EditChoreDto } from "./types";
 
 export function normalizeDate(date: Date) {
     const returnVal = new Date(date);
@@ -24,9 +24,6 @@ export function emptyEditChoreDto(): EditChoreDto {
     };
 }
 
-export function emptyEditUserDto(): EditUserDto {
-    return {
-        name: '',
-        imageName: '',
-    };
+export function clone<T>(toClone: T): T {
+    return JSON.parse(JSON.stringify(toClone));
 }

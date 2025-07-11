@@ -45,7 +45,7 @@ export interface EditUserDto {
 
 export type User = {
     data: UserDto,
-    imageUrl: string,
+    imageUrl: string | null,
 }
 
 export type Gateway = ReturnType<() => typeof gateway>;
