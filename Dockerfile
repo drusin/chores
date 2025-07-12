@@ -27,6 +27,7 @@ COPY --from=backend-build /app/back/build/libs/*.jar app.jar
 VOLUME /data
 ENV SPRING_DATASOURCE_URL=jdbc:h2:file:/data/spring-boot-h2-db
 ENV IMAGES_DATA_FOLDER=/data/images/
+ENV DATA_FOLDER=/data/
 
 EXPOSE 8080
 
