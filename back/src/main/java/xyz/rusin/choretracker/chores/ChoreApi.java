@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/chores")
+@RequestMapping("/api/chores")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChoreApi {
     

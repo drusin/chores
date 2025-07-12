@@ -1,5 +1,6 @@
 package xyz.rusin.choretracker.images;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -17,19 +18,20 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/images")
+@RequestMapping("/api/images")
 public class ImageApi {
-    private final String FILE_PATH = "~/choretracker/images/";
+    @Value("${images.data.folder}")
+    private String filePath = "~/choretracker/images/";
 
     @PostMapping("/")
     public ImageMetadataDto uploadImage(@RequestParam("image") MultipartFile file) {
-        File uploadDir = new File(FILE_PATH);
+        File uploadDir = new File(filePath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
 
         String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(FILE_PATH, filename);
+        Path filePath = Paths.get(this.filePath, filename);
         try {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         }
@@ -41,7 +43,7 @@ public class ImageApi {
 
     @GetMapping("/{image:.+}")
     public ResponseEntity<Resource> getFile(@PathVariable String image) throws IOException {
-        Path filePath = Paths.get(FILE_PATH).resolve(image).normalize();
+        Path filePath = Paths.get(this.filePath).resolve(image).normalize();
         Resource resource = new UrlResource(filePath.toUri());
 
         if (!resource.exists()) {

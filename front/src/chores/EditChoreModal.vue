@@ -18,6 +18,7 @@
       <input class="full-width" type="date" v-model="dateModel" />
 
       <ImageUpload
+          :max-preview-height="null"
           :current-preview="currentImagePreview"
           @old-image-removed="onOldImageRemoved"
           @new-image-selected="onNewImageSelected"

@@ -7,6 +7,6 @@ import { init as initTranslations } from "./translations/translationsPlugin.ts";
 import '/globals.css';
 
 initState(gateway);
-await initTranslations();
+initTranslations();
 const app = createApp(App);
 app.mount('#app')

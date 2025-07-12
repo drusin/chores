@@ -8,7 +8,7 @@
             "type": "java",
             "name": "ChoresTracker",
             "request": "launch",
-            "mainClass": "com.example.demo.ChoresTracker",
+            "mainClass": "xyz.rusin.choretracker.ChoresTracker",
             "projectName": "demo-back"
         },
         {

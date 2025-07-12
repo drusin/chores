@@ -7,7 +7,7 @@
     <main class="lanes">
       <div class="lane" v-for="person in state.users.value" :key="person.data.id">
         <div class="lane-header">
-          <img :src="person.imageUrl" alt="Profile" class="profile-pic" />
+          <img :src="person.imageUrl || undefined" alt="Profile" class="profile-pic" />
           <h2>{{ person.data.name }}</h2>
         </div>
         <ul class="chore-list">

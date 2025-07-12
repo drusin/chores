@@ -11,6 +11,6 @@ export function t(translationName: string) {
     return translationsInstance.translate(translationName);
 }
 
-export async function init() {
-    translationsInstance = await translations(navigator.languages);
+export function init() {
+    translationsInstance = translations(navigator.languages);
 }

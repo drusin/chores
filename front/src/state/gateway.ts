@@ -25,7 +25,7 @@ export default {
     },
 
     editChore: async(id: number, chore: EditChoreDto) => {
-        const request = await fetch(`${CHORES_URL}/${id}`, {
+        const request = await fetch(`${CHORES_URL}${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,7 +37,7 @@ export default {
     },
 
     deleteChore: async(id: number) => {
-        await fetch(`${CHORES_URL}/${id}`, {
+        await fetch(`${CHORES_URL}${id}`, {
             method: 'DELETE'
         });
     },
@@ -76,7 +76,7 @@ export default {
     },
 
     updateUser: async(id: number, user: EditUserDto) => {
-        const request = await fetch(`${USERS_URL}/${id}`, {
+        const request = await fetch(`${USERS_URL}${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ export default {
     },
 
     deleteUser: async(id: number) => {
-        await fetch(`${USERS_URL}/${id}`, {
+        await fetch(`${USERS_URL}${id}`, {
             method: 'DELETE'
         });
     }

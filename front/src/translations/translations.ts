@@ -1,3 +1,11 @@
+import trnaslationsEn from './translations-en.json';
+import trnaslationsDe from './translations-de.json';
+
+const MAPPING: any = {
+    'en': trnaslationsEn,
+    'de': trnaslationsDe,
+}
+
 const AVAILABLE_TRANSLATIONS = ['en', 'de'];
 const FALLBACK = 'en';
 
@@ -22,9 +30,9 @@ function findAvailableTranslationsCode(languages: readonly string[]) {
     return FALLBACK;
 }
 
-export default async function(languages: readonly string[]) {
+export default function(languages: readonly string[]) {
     const internalCode = findAvailableTranslationsCode(languages);
-    const translationsFile = await import(`./translations-${internalCode}.json`);
+    const translationsFile = MAPPING[internalCode];
     return {
         translate: (translationName: string) => translate(translationsFile, translationName, internalCode),
     };
