@@ -34,10 +34,10 @@
 
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
-import ChoreCard from './ChoreCard.vue';
-import EditChoreModal from './EditChoreModal.vue';
+import ChoreCard from './chores/ChoreCard.vue';
+import EditChoreModal from './chores/EditChoreModal.vue';
 import { emptyEditChoreDto } from './helpers';
-import UserManagerModal from "./UserManagerModal.vue";
+import UserManagerModal from "./users/UserManagerModal.vue";
 import { getState } from "./state/statePlugin.ts";
 import { t } from './translations/translationsPlugin.ts';
 
@@ -101,8 +101,8 @@ header {
   margin-bottom: 0.5em;
 }
 .profile-pic {
-  width: 40px;
-  height: 40px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
 }

@@ -8,16 +8,16 @@
       <span class="due-date" v-show="!chore.data.done">{{ displayDate() }}</span>
       <img v-if="chore.imageUrl" :src="chore.imageUrl" class="chore-image">
       <div class="button-row">
-        <button @click.stop="$emit('edit')"><img src="/editing.png" width="25" height="25" /></button>
-        <button @click.stop="$emit('delete')"><img src="/recycle-bin.png" width="25" height="25" /></button>
+        <button @click.stop="$emit('edit')" class="edit"><img src="/editing.png" width="25" height="25" /></button>
+        <button @click.stop="$emit('delete')" class="edit"><img src="/recycle-bin.png" width="25" height="25" /></button>
       </div>
     </div>
   </li>
 </template>
 
 <script setup lang="ts">
-import type { Chore } from './types';
-import { normalizeDate } from './helpers';
+import type { Chore } from '../types.ts';
+import { normalizeDate } from '../helpers.ts';
 
 const { chore } = defineProps<{
     chore: Chore,
@@ -46,16 +46,16 @@ function displayDate() {
   transition: background 0.3s;
 }
 .chore-card.planned {
-  background: #e0e0e0;
+  background: var(--bg-planned);
 }
 .chore-card.due {
-  background: #fff59d;
+  background: var(--bg-due);
 }
 .chore-card.overdue {
-  background: #ef9a9a;
+  background: var(--bg-overdue);
 }
 .chore-card.done {
-  background: #a5d6a7;
+  background: var(--bg-done);
 }
 .chore-content {
   display: flex;
@@ -84,6 +84,10 @@ function displayDate() {
     cursor: pointer;
     font-size: 1.2em;
   }
+}
+
+.edit {
+  padding: 0;
 }
 
 </style>

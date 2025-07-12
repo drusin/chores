@@ -1,0 +1,33 @@
+:root {
+    --bg-planned: #e0e0e0;
+    --bg-due: #fff59d;
+    --bg-overdue: #ef9a9a;
+    --bg-done: #a5d6a7;
+    --bg-edit: #007bff;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.btn-save {
+    background-color: var(--bg-edit);
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-cancel {
+    border-radius: 4px;
+}
+
+input {
+    padding: 0.5em;
+}
+
+.full-width {
+    width: 100%;
+    margin: 0.5em 0;
+    box-sizing: border-box;
+}

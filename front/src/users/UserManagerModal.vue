@@ -6,7 +6,7 @@
       <ul class="user-list">
         <li v-for="user in users" :key="user.data.id" class="user-item">
           <div class="image-wrapper">
-            <ImageUpload :current-preview="user.imageUrl" :max-preview-height="60"
+            <ImageUpload :current-preview="user.imageUrl" :max-preview-height="120"
                          @old-image-removed="() => onOldImageRemoved(user.data.id)"
                          @new-image-removed="() => onNewImageRemoved(user.data.id)"
                          @new-image-selected="(file) => onNewImageSelected(user.data.id, file)"
@@ -22,8 +22,8 @@
       <button @click="() => newUserModal?.show()">{{ t('createNewUser') }}</button>
 
       <div class="modal-actions">
-        <button @click="submit">{{ t('save') }}</button>
-        <button @click="hide">{{ t('cancel') }}</button>
+        <button @click="submit" class="btn-save">{{ t('save') }}</button>
+        <button @click="hide" class="btn-cancel">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -32,13 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import { getState } from "./state/statePlugin.ts";
-import ImageUpload from "./ImageUpload.vue";
+import { getState } from "../state/statePlugin.ts";
+import ImageUpload from "../ImageUpload.vue";
 import { type Ref, ref, useTemplateRef } from "vue";
 import NewUserModal from "./NewUserModal.vue";
-import type { User } from "./types.ts";
-import { clone } from "./helpers.ts";
-import { t } from './translations/translationsPlugin.ts';
+import type { User } from "../types.ts";
+import { clone } from "../helpers.ts";
+import { t } from '../translations/translationsPlugin.ts';
 
 const state = getState();
 const showForm = ref(false);
@@ -141,7 +141,7 @@ async function onNewUserCreated(name: string, image: File | null) {
 }
 
 .image-wrapper {
-  height: 60px;
+  height: 120px;
   width: auto;
   max-width: 100%;
   display: flex;
@@ -160,9 +160,7 @@ async function onNewUserCreated(name: string, image: File | null) {
 
 .user-controls input {
   flex-grow: 1;
-  padding: 0.3em 0.5em;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+
 }
 
 .user-controls button {

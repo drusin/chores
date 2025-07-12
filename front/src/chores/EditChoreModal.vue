@@ -27,7 +27,7 @@
       <!-- Repeating Chore Section -->
       <div class="repeat-section">
         <label>
-          {{ t('repeateEvery') }}
+          {{ t('repeatEvery') }}
           <input
               type="number"
               min="0"
@@ -71,8 +71,8 @@
 
       <!-- Actions -->
       <div class="modal-actions">
-        <button @click="submit">{{ t('save') }}</button>
-        <button @click="hide">{{ t('cancel') }}</button>
+        <button @click="submit" class="btn-save">{{ t('save') }}</button>
+        <button @click="hide" class="btn-cancel">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -80,11 +80,11 @@
 
 <script setup lang="ts">
 import { ref, computed, type Ref } from 'vue';
-import type { EditChoreDto } from './types';
-import { emptyEditChoreDto } from './helpers';
-import { getState } from './state/statePlugin';
-import ImageUpload from './ImageUpload.vue';
-import { t } from './translations/translationsPlugin.ts';
+import type { EditChoreDto } from '../types.ts';
+import { emptyEditChoreDto } from '../helpers.ts';
+import { getState } from '../state/statePlugin.ts';
+import ImageUpload from '../ImageUpload.vue';
+import { t } from '../translations/translationsPlugin.ts';
 
 const state = getState();
 
@@ -170,11 +170,8 @@ async function submit() {
   box-sizing: border-box;
 }
 
-.modal-content .full-width {
-  width: 100%;
-  margin: 0.5em 0;
+.modal-content select {
   padding: 0.5em;
-  box-sizing: border-box;
 }
 
 .modal-actions {
@@ -198,6 +195,9 @@ async function submit() {
   flex-direction: column;
   gap: 0.25em;
   margin-top: 0.5em;
+}
+.weekday-checkboxes label {
+  cursor: pointer;
 }
 
 .weekday-checkboxes label {

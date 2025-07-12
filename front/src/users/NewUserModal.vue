@@ -5,14 +5,14 @@
 
       <div class="form-group">
         <label>{{ t('name') }}:</label>
-        <input v-model="name" :placeholder="t('enterName')" />
+        <input v-model="name" :placeholder="t('enterName')" class="full-width"/>
       </div>
 
       <div class="form-group">
         <label>{{ t('profileImage') }}:</label>
         <ImageUpload
             :current-preview="null"
-            :max-preview-height="100"
+            :max-preview-height="120"
             @old-image-removed="onImageRemoved"
             @new-image-selected="onImageSelected"
             @new-image-removed="onImageRemoved"
@@ -20,8 +20,8 @@
       </div>
 
       <div class="modal-actions">
-        <button @click="createUser">{{ t('save') }}</button>
-        <button @click="cancel">{{ t('cancel') }}</button>
+        <button @click="createUser" class="btn-save">{{ t('save') }}</button>
+        <button @click="cancel" class="btn-cancel">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -29,8 +29,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import ImageUpload from "./ImageUpload.vue";
-import { t } from './translations/translationsPlugin.ts';
+import ImageUpload from "../ImageUpload.vue";
+import { t } from '../translations/translationsPlugin.ts';
 
 const emit = defineEmits<{
   created: [name: string, imageFile: File | null];
@@ -103,13 +103,6 @@ function resetAndClose() {
   font-weight: 500;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -117,20 +110,4 @@ function resetAndClose() {
   margin-top: 1rem;
 }
 
-.modal-actions button {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modal-actions button:first-child {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-}
-
-.modal-actions button:last-child {
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-}
 </style>
