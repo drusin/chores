@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/chores")
@@ -29,9 +28,10 @@ public class ChoreApi {
 
 	@GetMapping(path = "/") 
     public List<ChoreEntity> getChores() {
-        List<ChoreEntity> list = StreamSupport.stream(repository.findAll().spliterator(), false).toList();
-        System.out.println("Returning chores: " + Arrays.toString(list.toArray()));
-        return list;
+        Date oneDayAgo = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+        List<ChoreEntity> chores = repository.findByDoneFalseOrDoneDateAfter(oneDayAgo);
+        System.out.println("Returning chores: " + Arrays.toString(chores.toArray()));
+        return chores;
     }
 
     @PostMapping(path = "/")
