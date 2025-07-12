@@ -1,9 +1,9 @@
 <template>
   <div class="modal" v-if="showForm">
     <div class="modal-content">
-      <h3>{{ isEditing ? 'Bearbeiten' : 'Neue Aufgabe' }}</h3>
+      <h3>{{ currentId ? t('editTask') : t('newTask') }}</h3>
 
-      <input class="full-width" v-model="choreModel.title" placeholder="Titel" />
+      <input class="full-width" v-model="choreModel.title" :placeholder="t('titlePlaceholder')" />
 
       <select class="full-width" v-model="choreModel.assignedTo">
         <option
@@ -27,42 +27,64 @@
       <!-- Repeating Chore Section -->
       <div class="repeat-section">
         <label>
-          Wiederholen alle
+          {{ t('repeateEvery') }}
           <input
               type="number"
               min="0"
               v-model.number="choreModel.repeatsEveryWeeks"
               class="repeat-weeks-input full-width"
           />
-          Wochen
+          {{ t('weeks') }}
         </label>
 
         <div class="weekday-checkboxes" v-if="choreModel.repeatsEveryWeeks > 0">
-          <label><input type="checkbox" v-model="choreModel.repeatsOnMonday" /> Montag</label>
-          <label><input type="checkbox" v-model="choreModel.repeatsOnTuesday" /> Dienstag</label>
-          <label><input type="checkbox" v-model="choreModel.repeatsOnWednesday" /> Mittwoch</label>
-          <label><input type="checkbox" v-model="choreModel.repeatsOnThursday" /> Donnerstag</label>
-          <label><input type="checkbox" v-model="choreModel.repeatsOnFriday" /> Freitag</label>
-          <label><input type="checkbox" v-model="choreModel.repeatsOnSaturday" /> Samstag</label>
-          <label><input type="checkbox" v-model="choreModel.repeatsOnSunday" /> Sonntag</label>
+          <label>
+            <input type="checkbox" v-model="choreModel.repeatsOnMonday" />
+            {{ t('monday') }}
+          </label>
+          <label>
+            <input type="checkbox" v-model="choreModel.repeatsOnTuesday" />
+            {{ t('tuesday') }}
+          </label>
+          <label>
+            <input type="checkbox" v-model="choreModel.repeatsOnWednesday" />
+            {{ t('wednesday') }}
+          </label>
+          <label>
+            <input type="checkbox" v-model="choreModel.repeatsOnThursday" />
+            {{ t('thursday') }}
+          </label>
+          <label>
+            <input type="checkbox" v-model="choreModel.repeatsOnFriday" />
+            {{ t('friday') }}
+          </label>
+          <label>
+            <input type="checkbox" v-model="choreModel.repeatsOnSaturday" />
+            {{ t('saturday') }}
+          </label>
+          <label>
+            <input type="checkbox" v-model="choreModel.repeatsOnSunday" />
+            {{ t('sunday') }}
+          </label>
         </div>
       </div>
 
       <!-- Actions -->
       <div class="modal-actions">
-        <button @click="submit">Speichern</button>
-        <button @click="hide">Abbrechen</button>
+        <button @click="submit">{{ t('save') }}</button>
+        <button @click="hide">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, type Ref } from 'vue';
 import type { EditChoreDto } from './types';
 import { emptyEditChoreDto } from './helpers';
 import { getState } from './state/statePlugin';
 import ImageUpload from './ImageUpload.vue';
+import { t } from './translations/translationsPlugin.ts';
 
 const state = getState();
 
@@ -72,10 +94,8 @@ const showForm = ref(false);
 const choreModel = ref<EditChoreDto>(emptyEditChoreDto());
 
 const currentImagePreview = ref<string | null>(null);
-let currentId: number | null = null;
+let currentId: Ref<number | null> = ref(null);
 let newFile: File | null = null;
-
-const isEditing = computed(() => !!currentId);
 
 const dateModel = computed({
   get: () => {
@@ -88,7 +108,7 @@ const dateModel = computed({
 });
 
 function show(model: EditChoreDto, imageUrl: string | null = null, id: number | null = null) {
-  currentId = id;
+  currentId.value = id;
   choreModel.value = { ...model };
   currentImagePreview.value = imageUrl;
   newFile = null;
@@ -117,9 +137,10 @@ async function submit() {
     choreModel.value.imageName = await state.uploadImage(newFile);
   }
 
-  if (currentId !== null) {
-    await state.editChore(currentId, choreModel.value);
-  } else {
+  if (currentId.value !== null) {
+    await state.editChore(currentId.value, choreModel.value);
+  }
+  else {
     await state.createChore(choreModel.value);
   }
 

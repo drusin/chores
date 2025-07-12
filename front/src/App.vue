@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header>
-      <h1>Family Chore Tracker</h1>
+      <h1>{{t('familyChoreTracker')}}</h1>
     </header>
 
     <main class="lanes">
@@ -39,6 +39,7 @@ import EditChoreModal from './EditChoreModal.vue';
 import { emptyEditChoreDto } from './helpers';
 import UserManagerModal from "./UserManagerModal.vue";
 import { getState } from "./state/statePlugin.ts";
+import { t } from './translations/translationsPlugin.ts';
 
 const state = getState();
 
@@ -46,7 +47,7 @@ const userManagementModal = useTemplateRef('user-management-modal');
 const editChoreModal = useTemplateRef('edit-chore-modal');
 
 function openUserManagementModal() {
-  userManagementModal.value?.show(state.users.value);
+  userManagementModal.value?.show();
 }
 
 function openEditChoreModal() {
@@ -54,7 +55,7 @@ function openEditChoreModal() {
 }
 
 function deleteChore(id: number) {
-  if (confirm('Bist du sicher, dass du diese Aufgabe löschen möchtest?')) {
+  if (confirm(t('areYouSureDeleteChore'))) {
     state.deleteChore(id);
   }
 }

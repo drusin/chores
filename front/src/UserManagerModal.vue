@@ -1,7 +1,7 @@
 <template>
   <div class="modal" v-if="showForm">
     <div class="modal-content">
-      <h3>User Management</h3>
+      <h3>{{ t('userManagement') }}</h3>
 
       <ul class="user-list">
         <li v-for="user in users" :key="user.data.id" class="user-item">
@@ -13,17 +13,17 @@
             />
           </div>
           <div class="user-controls">
-            <input v-model="user.data.name" placeholder="Name" />
-            <button @click="deleteUser(user.data.id)" aria-label="Delete user">🗑️</button>
+            <input v-model="user.data.name" :placeholder="t('name')" />
+            <button @click="deleteUser(user.data.id)" :aria-label="t('deleteUser')">🗑️</button>
           </div>
         </li>
       </ul>
       <hr/>
-      <button @click="() => newUserModal?.show()">New user</button>
+      <button @click="() => newUserModal?.show()">{{ t('createNewUser') }}</button>
 
       <div class="modal-actions">
-        <button @click="submit">Speichern</button>
-        <button @click="hide">Abbrechen</button>
+        <button @click="submit">{{ t('save') }}</button>
+        <button @click="hide">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -38,6 +38,7 @@ import { type Ref, ref, useTemplateRef } from "vue";
 import NewUserModal from "./NewUserModal.vue";
 import type { User } from "./types.ts";
 import { clone } from "./helpers.ts";
+import { t } from './translations/translationsPlugin.ts';
 
 const state = getState();
 const showForm = ref(false);
@@ -89,7 +90,7 @@ async function submit() {
 }
 
 async function deleteUser(userId: number) {
-  if (confirm('Bist du sicher, dass du diesen Nutzer löschen möchtest?')) {
+  if (confirm(t('areYouSureDeleteUser'))) {
     await state.deleteUser(userId);
     copyUsersFromState();
   }

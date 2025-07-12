@@ -1,15 +1,15 @@
 <template>
   <div class="modal" v-if="show">
     <div class="modal-content">
-      <h3>Create New User</h3>
+      <h3>{{ t('createNewUser') }}</h3>
 
       <div class="form-group">
-        <label>Name:</label>
-        <input v-model="name" placeholder="Enter name" />
+        <label>{{ t('name') }}:</label>
+        <input v-model="name" :placeholder="t('enterName')" />
       </div>
 
       <div class="form-group">
-        <label>Profile Image:</label>
+        <label>{{ t('profileImage') }}:</label>
         <ImageUpload
             :current-preview="null"
             :max-preview-height="100"
@@ -20,8 +20,8 @@
       </div>
 
       <div class="modal-actions">
-        <button @click="createUser">Create</button>
-        <button @click="cancel">Cancel</button>
+        <button @click="createUser">{{ t('save') }}</button>
+        <button @click="cancel">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ImageUpload from "./ImageUpload.vue";
+import { t } from './translations/translationsPlugin.ts';
 
 const emit = defineEmits<{
   created: [name: string, imageFile: File | null];
