@@ -1,11 +1,11 @@
 <template>
   <div class="modal" v-if="showForm">
-    <div class="modal-content">
-      <h3>{{ currentId ? t('editTask') : t('newTask') }}</h3>
+    <div class="modal-content p-3 rounded shadow-sm">
+      <h3 class="mt-1 mb-3">{{ currentId ? t('editTask') : t('newTask') }}</h3>
 
-      <input class="full-width" v-model="choreModel.title" :placeholder="t('titlePlaceholder')" />
+      <input class="w-100 mb-2" v-model="choreModel.title" :placeholder="t('titlePlaceholder')" />
 
-      <select class="full-width" v-model="choreModel.assignedTo">
+      <select class="w-100 mb-2" v-model="choreModel.assignedTo">
         <option
             v-for="user in state.users.value"
             :key="user.data.id"
@@ -15,7 +15,7 @@
         </option>
       </select>
 
-      <input class="full-width" type="date" v-model="dateModel" />
+      <input class="w-100 mb-2" type="date" v-model="dateModel" />
 
       <ImageUpload
           :max-preview-height="null"
@@ -26,19 +26,19 @@
       />
 
       <!-- Repeating Chore Section -->
-      <div class="repeat-section">
-        <label>
+      <div class="repeat-section mt-3">
+        <label class="d-flex align-items-center gap-2">
           {{ t('repeatEvery') }}
           <input
               type="number"
               min="0"
               v-model.number="choreModel.repeatsEveryWeeks"
-              class="repeat-weeks-input full-width"
+              class="repeat-weeks-input"
           />
           {{ t('weeks') }}
         </label>
 
-        <div class="weekday-checkboxes" v-if="choreModel.repeatsEveryWeeks > 0">
+        <div class="weekday-checkboxes d-flex flex-column gap-1 mt-2" v-if="choreModel.repeatsEveryWeeks > 0">
           <label>
             <input type="checkbox" v-model="choreModel.repeatsOnMonday" />
             {{ t('monday') }}
@@ -71,9 +71,9 @@
       </div>
 
       <!-- Actions -->
-      <div class="modal-actions">
-        <button @click="submit" class="btn-save">{{ t('save') }}</button>
-        <button @click="hide" class="btn-cancel">{{ t('cancel') }}</button>
+      <div class="modal-actions d-flex justify-content-between mt-3">
+        <button @click="submit" class="btn btn-primary">{{ t('save') }}</button>
+        <button @click="hide" class="btn btn-outline-secondary">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -160,55 +160,26 @@ async function submit() {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
 .modal-content {
-  background: white;
-  padding: 1em;
-  border-radius: 8px;
+  background: var(--bg-color);
   width: 90%;
   max-width: 320px;
   box-sizing: border-box;
 }
 
-.modal-content select {
-  padding: 0.5em;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1em;
-}
-
-.repeat-section {
-  margin-top: 1em;
-}
-
 .repeat-weeks-input {
   width: 4em;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
 }
 
-.weekday-checkboxes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25em;
-  margin-top: 0.5em;
-}
 .weekday-checkboxes label {
   cursor: pointer;
-}
-
-.weekday-checkboxes label {
   display: flex;
   align-items: center;
-  gap: 0.5em;
-  width: 100%;
+  gap: var(--spacing-2);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 </style>

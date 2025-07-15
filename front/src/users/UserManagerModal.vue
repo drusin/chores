@@ -1,10 +1,10 @@
 <template>
   <div class="modal" v-if="showForm">
-    <div class="modal-content">
-      <h3>{{ t('userManagement') }}</h3>
+    <div class="modal-content p-3 rounded shadow-sm">
+      <h3 class="mt-1 mb-3">{{ t('userManagement') }}</h3>
 
       <ul class="user-list">
-        <li v-for="user in users" :key="user.data.id" class="user-item">
+        <li v-for="user in users" :key="user.data.id" class="user-item d-flex flex-column gap-2 mb-2">
           <div class="image-wrapper">
             <ImageUpload :current-preview="user.imageUrl" :max-preview-height="120"
                          @old-image-removed="() => onOldImageRemoved(user.data.id)"
@@ -12,18 +12,18 @@
                          @new-image-selected="(file) => onNewImageSelected(user.data.id, file)"
             />
           </div>
-          <div class="user-controls">
-            <input v-model="user.data.name" :placeholder="t('name')" />
-            <button @click="deleteUser(user.data.id)" :aria-label="t('deleteUser')">🗑️</button>
+          <div class="user-controls d-flex align-items-center gap-2">
+            <input v-model="user.data.name" :placeholder="t('name')" class="w-100" />
+            <button @click="deleteUser(user.data.id)" :aria-label="t('deleteUser')" class="btn btn-danger">🗑️</button>
           </div>
         </li>
       </ul>
-      <hr/>
-      <button @click="() => newUserModal?.show()">{{ t('createNewUser') }}</button>
+      <hr class="my-3"/>
+      <button @click="() => newUserModal?.show()" class="btn btn-secondary w-100">{{ t('createNewUser') }}</button>
 
-      <div class="modal-actions">
-        <button @click="submit" class="btn-save">{{ t('save') }}</button>
-        <button @click="hide" class="btn-cancel">{{ t('cancel') }}</button>
+      <div class="modal-actions d-flex justify-content-between mt-3">
+        <button @click="submit" class="btn btn-primary">{{ t('save') }}</button>
+        <button @click="hide" class="btn btn-outline-secondary">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -117,12 +117,11 @@ async function onNewUserCreated(name: string, image: File | null) {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
 .modal-content {
-  background: white;
-  padding: 1em;
-  border-radius: 8px;
+  background: var(--bg-color);
   width: 90%;
   max-width: 500px;
 }
@@ -131,13 +130,6 @@ async function onNewUserCreated(name: string, image: File | null) {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.user-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  margin-bottom: 0.5em;
 }
 
 .image-wrapper {
@@ -151,35 +143,8 @@ async function onNewUserCreated(name: string, image: File | null) {
   flex-shrink: 0;
 }
 
-.user-controls {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-}
-
 .user-controls input {
   flex-grow: 1;
-
-}
-
-.user-controls button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2em;
-  line-height: 1;
-  color: #c00;
-  transition: color 0.3s ease;
-}
-
-.user-controls button:hover {
-  color: #900;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1em;
 }
 </style>
+

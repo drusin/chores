@@ -1,15 +1,15 @@
 <template>
   <li
-    class="chore-card"
+    class="chore-card p-2 rounded shadow-sm mb-2"
     :class="chore.status"
   >
-    <div class="chore-content" @click="$emit('toggle')">
-      <strong>{{ chore.data.title }}</strong>
+    <div class="chore-content d-flex flex-column gap-1" @click="$emit('toggle')">
+      <strong class="text-bold">{{ chore.data.title }}</strong>
       <span class="due-date" v-show="!chore.data.done">{{ displayDate() }}</span>
-      <img v-if="chore.imageUrl" :src="chore.imageUrl" class="chore-image">
-      <div class="button-row">
-        <button @click.stop="$emit('edit')" class="edit"><img src="/editing.png" width="25" height="25" /></button>
-        <button @click.stop="$emit('delete')" class="edit"><img src="/recycle-bin.png" width="25" height="25" /></button>
+      <img v-if="chore.imageUrl" :src="chore.imageUrl" class="chore-image rounded mt-2">
+      <div class="button-row d-flex justify-content-between mt-1">
+        <button @click.stop="$emit('edit')" class="chore-action-btn"><img src="/editing.png" width="25" height="25" /></button>
+        <button @click.stop="$emit('delete')" class="chore-action-btn delete"><img src="/recycle-bin.png" width="25" height="25" /></button>
       </div>
     </div>
   </li>
@@ -39,9 +39,6 @@ function displayDate() {
 
 <style scoped>
 .chore-card {
-  padding: 0.5em;
-  border-radius: 8px;
-  margin: 0.5em 0;
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -56,38 +53,40 @@ function displayDate() {
 }
 .chore-card.done {
   background: var(--bg-done);
+  text-decoration: line-through;
+  color: var(--color-secondary);
 }
-.chore-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25em;
-}
+
 .due-date {
   font-size: 0.85em;
   color: #555;
 }
 .chore-image {
-  margin-top: 0.5em;
   max-width: 100%;
-  border-radius: 6px;
 }
-.button-row {
-  display: flex;
-  gap: 0.5em;
-  margin-top: 0.25em;
-  justify-content: space-between;
-  button {
+
+.chore-action-btn {
     width: 2.5em;
     height: 2.5em;
     border-radius: 50%;
     border: none;
     cursor: pointer;
     font-size: 1.2em;
-  }
+    padding: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--box-shadow-sm);
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-.edit {
-  padding: 0;
+.chore-action-btn:hover {
+    background-color: var(--color-light);
+}
+
+.chore-action-btn.delete:hover {
+    background-color: var(--color-danger);
 }
 
 </style>

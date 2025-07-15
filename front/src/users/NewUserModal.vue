@@ -1,15 +1,15 @@
 <template>
   <div class="modal" v-if="show">
-    <div class="modal-content">
-      <h3>{{ t('createNewUser') }}</h3>
+    <div class="modal-content p-3 rounded shadow-sm">
+      <h3 class="mt-1 mb-3">{{ t('createNewUser') }}</h3>
 
-      <div class="form-group">
-        <label>{{ t('name') }}:</label>
-        <input v-model="name" :placeholder="t('enterName')" class="full-width"/>
+      <div class="form-group mb-3">
+        <label class="d-block mb-2 text-bold">{{ t('name') }}:</label>
+        <input v-model="name" :placeholder="t('enterName')" class="w-100"/>
       </div>
 
-      <div class="form-group">
-        <label>{{ t('profileImage') }}:</label>
+      <div class="form-group mb-3">
+        <label class="d-block mb-2 text-bold">{{ t('profileImage') }}:</label>
         <ImageUpload
             :current-preview="null"
             :max-preview-height="120"
@@ -19,9 +19,9 @@
         />
       </div>
 
-      <div class="modal-actions">
-        <button @click="createUser" class="btn-save">{{ t('save') }}</button>
-        <button @click="cancel" class="btn-cancel">{{ t('cancel') }}</button>
+      <div class="modal-actions d-flex justify-content-end gap-2 mt-3">
+        <button @click="createUser" class="btn btn-primary">{{ t('save') }}</button>
+        <button @click="cancel" class="btn btn-outline-secondary">{{ t('cancel') }}</button>
       </div>
     </div>
   </div>
@@ -86,28 +86,8 @@ function resetAndClose() {
 }
 
 .modal-content {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
+  background: var(--bg-color);
   width: 90%;
   max-width: 400px;
 }
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
 </style>
