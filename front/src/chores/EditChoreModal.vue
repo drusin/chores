@@ -182,8 +182,4 @@ async function submit() {
   white-space: nowrap;
 }
 
-.weekday-checkboxes input[type="checkbox"] {
-  width: auto;
-}
-
 </style>
