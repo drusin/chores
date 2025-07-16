@@ -4,7 +4,7 @@
       <h1>{{t('familyChoreTracker')}}</h1>
     </header>
 
-^^    <main class="lanes gap-3">
+    <main class="lanes gap-3">
       <div class="lane" v-for="person in state.users.value" :key="person.data.id">
         <div class="lane-header d-flex align-items-center gap-2 mb-2">
           <img :src="person.imageUrl || undefined" alt="Profile" class="profile-pic" />
