@@ -38,7 +38,7 @@
           {{ t('weeks') }}
         </label>
 
-        <div class="weekday-checkboxes d-flex flex-column gap-1 mt-2" v-if="choreModel.repeatsEveryWeeks > 0">
+        <div class="weekday-checkboxes d-flex flex-column align-items-start gap-1 mt-2" v-if="choreModel.repeatsEveryWeeks > 0">
           <label>
             <input type="checkbox" v-model="choreModel.repeatsOnMonday" />
             {{ t('monday') }}
@@ -180,6 +180,10 @@ async function submit() {
   align-items: center;
   gap: var(--spacing-2);
   white-space: nowrap;
+}
+
+.weekday-checkboxes input[type="checkbox"] {
+  width: auto;
 }
 
 </style>
