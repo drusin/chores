@@ -12,5 +12,7 @@ export function t(translationName: string) {
 }
 
 export function init() {
-    translationsInstance = translations(navigator.languages);
+    const { translate, internalCode } = translations(navigator.languages);
+    translationsInstance = { translate };
+    document.documentElement.lang = internalCode
 }

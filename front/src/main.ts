@@ -8,5 +8,6 @@ import '/globals.css';
 
 initState(gateway);
 initTranslations();
+
 const app = createApp(App);
 app.mount('#app')

@@ -35,5 +35,6 @@ export default function(languages: readonly string[]) {
     const translationsFile = MAPPING[internalCode];
     return {
         translate: (translationName: string) => translate(translationsFile, translationName, internalCode),
+        internalCode,
     };
 }
