@@ -76,7 +76,8 @@ onMounted(() => {
   setInterval(() => {
     state.refreshChores();
     state.refreshUsers();
-  }, 60000);
+  }, 60 * 1000);
+  setInterval(() => location.reload, 60 * 60 * 1000);
 });
 
 </script>
