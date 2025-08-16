@@ -12,7 +12,10 @@ const isFullscreen = ref(false);
 const isMobile = ref(false);
 
 const checkIsMobile = () => {
-  isMobile.value = window.innerWidth <= 768;
+  isMobile.value =
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    navigator.msMaxTouchPoints > 0;
 };
 
 const onFullscreenChange = () => {
