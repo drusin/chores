@@ -31,5 +31,6 @@
   "due": "Fällig",
   "overdue": "Überfällig",
   "done": "Erledigt",
-  "deleteUser": "Nutzer löschen"
+  "deleteUser": "Nutzer löschen",
+  "enterFullscreen": "Vollbildmodus"
 }

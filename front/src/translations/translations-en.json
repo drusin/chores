@@ -31,5 +31,6 @@
   "due": "Due",
   "overdue": "Overdue",
   "done": "Done",
-  "deleteUser": "Delete user"
+  "deleteUser": "Delete user",
+  "enterFullscreen": "Enter fullscreen"
 }

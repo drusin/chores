@@ -1,4 +1,5 @@
 <template>
+  <FullscreenButton />
   <div class="container p-3">
     <header class="text-center mb-4">
       <h1>{{t('familyChoreTracker')}}</h1>
@@ -34,6 +35,7 @@
 
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
+import FullscreenButton from './components/FullscreenButton.vue';
 import ChoreCard from './chores/ChoreCard.vue';
 import EditChoreModal from './chores/EditChoreModal.vue';
 import { emptyEditChoreDto } from './helpers';
