@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { useTemplateRef, onMounted } from 'vue';
 import FullscreenButton from './components/FullscreenButton.vue';
 import ChoreCard from './chores/ChoreCard.vue';
 import EditChoreModal from './chores/EditChoreModal.vue';
@@ -70,6 +70,13 @@ function editChore(id: number) {
   }
   editChoreModal.value?.show(chore.data, chore.imageUrl, id);
 }
+
+onMounted(() => {
+  setInterval(() => {
+    state.refreshChores();
+    state.refreshUsers();
+  }, 60000);
+});
 
 </script>
 

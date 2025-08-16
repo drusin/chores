@@ -144,6 +144,8 @@ export default function (gateway: Gateway) {
     return {
         get chores() { return state.chores; },
         get users() { return state.users; },
+        refreshChores: () => refreshChores(internals),
+        refreshUsers: () => refreshUsers(internals),
         choresFor: (assigneeId: number) => choresFor(internals, assigneeId),
         createChore: (newChore: EditChoreDto) => createChore(internals, newChore),
         toggleChore: (id: number) => toggleChore(internals, id),
