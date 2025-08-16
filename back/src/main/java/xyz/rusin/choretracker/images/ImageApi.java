@@ -1,5 +1,6 @@
 package xyz.rusin.choretracker.images;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -36,6 +37,10 @@ public class ImageApi {
         Path filePath = Paths.get(this.filePath, filename);
         try {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            Thumbnails.of(filePath.toFile())
+                .width(400)
+                .keepAspectRatio(true)
+                .toFile(filePath.toFile());
         }
         catch (IOException exception) {
             throw new RuntimeException(exception);
