@@ -27,6 +27,7 @@
         <button class="fab-btn" @click="openEditChoreModal">+</button>
       </div>
     </main>
+    <div class="space-for-buttons"></div>
 
     <UserManagerModal ref="user-management-modal" />
     <EditChoreModal ref="edit-chore-modal" />
@@ -152,5 +153,9 @@ onMounted(() => {
 
 .fab-btn:hover {
   background-color: #0056b3; /* Darker shade of primary */
+}
+
+.space-for-buttons {
+  height: 96px;
 }
 </style>
