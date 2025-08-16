@@ -3,6 +3,7 @@ package xyz.rusin.choretracker.images;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/images")
@@ -51,6 +53,7 @@ public class ImageApi {
         }
 
         return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
                 .contentType(MediaTypeFactory.getMediaType(resource).orElse(MediaType.APPLICATION_OCTET_STREAM))
                 .body(resource);
     }
