@@ -19,7 +19,7 @@ public record EditChoreDto (
     boolean repeatsOnSaturday,
     boolean repeatsOnSunday,
     boolean done
-) {
+) implements Recurring {
     public EditChoreDto recurrence(Date newDate) {
         return toBuilder().plannedDate(newDate).done(false).build();
     }

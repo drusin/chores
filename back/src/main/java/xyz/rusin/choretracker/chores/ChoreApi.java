@@ -5,18 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import xyz.rusin.choretracker.Helpers;
+
+import xyz.rusin.choretracker.DateHelper;
 import xyz.rusin.choretracker.users.UserEntity;
 import xyz.rusin.choretracker.users.UserRepository;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/chores")
@@ -70,17 +66,20 @@ public class ChoreApi {
 
     private void createRecurring(EditChoreDto choreDto) {
         System.out.println("Creating recurring chore for: " + choreDto);
-        List<DayOfWeek> daysOfWeek = Helpers.getDaysOfWeek(choreDto);
-        Optional<DayOfWeek> nextThisWeek = Helpers.findNextThisWeek(daysOfWeek);
-        EditChoreDto nextChore;
-        if (nextThisWeek.isPresent()) {
-            LocalDate nextDate = LocalDate.now().with(nextThisWeek.get());
-            nextChore = choreDto.recurrence(Date.from(nextDate.atStartOfDay().toInstant(ZoneOffset.UTC)));
-        } 
-        else {
-            LocalDate nextDay = Helpers.mondayInWeeks(choreDto.repeatsEveryWeeks()).with(TemporalAdjusters.nextOrSame(daysOfWeek.getFirst()));
-            nextChore = choreDto.recurrence(Date.from(nextDay.atStartOfDay().toInstant(ZoneOffset.UTC)));
-        }
+        EditChoreDto nextChore = choreDto.recurrence(DateHelper.nextOccurrence(new Date(), choreDto));
         createChore(nextChore);
+
+        // List<DayOfWeek> daysOfWeek = Helpers.getDaysOfWeek(choreDto);
+        // Optional<DayOfWeek> nextThisWeek = Helpers.findNextThisWeek(daysOfWeek);
+        // EditChoreDto nextChore;
+        // if (nextThisWeek.isPresent()) {
+        //     LocalDate nextDate = LocalDate.now().with(nextThisWeek.get());
+        //     nextChore = choreDto.recurrence(Date.from(nextDate.atStartOfDay().toInstant(ZoneOffset.UTC)));
+        // } 
+        // else {
+        //     LocalDate nextDay = Helpers.mondayInWeeks(choreDto.repeatsEveryWeeks()).with(TemporalAdjusters.nextOrSame(daysOfWeek.getFirst()));
+        //     nextChore = choreDto.recurrence(Date.from(nextDay.atStartOfDay().toInstant(ZoneOffset.UTC)));
+        // }
+        // createChore(nextChore);
     }
 }
