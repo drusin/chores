@@ -9,7 +9,7 @@
   "titlePlaceholder": "Titel",
   "assignedTo": "Zugewiesen an",
   "date": "Datum",
-  "repeatEvery": "Wiederholen alle",
+  "repeatEvery": "Alle",
   "weeks": "Wochen",
   "monday": "Montag",
   "tuesday": "Dienstag",
@@ -32,5 +32,7 @@
   "overdue": "Überfällig",
   "done": "Erledigt",
   "deleteUser": "Nutzer löschen",
-  "enterFullscreen": "Vollbildmodus"
+  "enterFullscreen": "Vollbildmodus",
+  "noRecurrence": "Nicht wiederholen",
+  "days": "Tage"
 }

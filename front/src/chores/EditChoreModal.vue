@@ -27,18 +27,38 @@
 
       <!-- Repeating Chore Section -->
       <div class="repeat-section mt-3">
-        <label class="d-flex align-items-center gap-2">
-          {{ t('repeatEvery') }}
-          <input
-              type="number"
-              min="0"
-              v-model.number="choreModel.repeatsEveryWeeks"
-              class="repeat-weeks-input"
-          />
-          {{ t('weeks') }}
-        </label>
+        <div class="recurrence-options d-flex flex-column gap-2 mb-3">
+          <label class="d-flex align-items-center gap-2">
+            <input type="radio" v-model="choreModel.repeatMode" :value="RepeatMode.none" />
+            {{ t('noRecurrence') }}
+          </label>
+          <label class="d-flex align-items-center gap-2">
+            <input type="radio" v-model="choreModel.repeatMode" :value="RepeatMode.days" />
+            {{ t('repeatEvery') }}
+            <input
+                type="number"
+                min="0"
+                v-model.number="choreModel.repeatsEveryDays"
+                class="repeat-weeks-input"
+                :disabled="choreModel.repeatMode !== RepeatMode.days"
+            />
+            {{ t('days') }}
+          </label>
+          <label class="d-flex align-items-center gap-2">
+            <input type="radio" v-model="choreModel.repeatMode" :value="RepeatMode.weeks" />
+            {{ t('repeatEvery') }}
+            <input
+                type="number"
+                min="0"
+                v-model.number="choreModel.repeatsEveryWeeks"
+                class="repeat-weeks-input"
+                :disabled="choreModel.repeatMode !== RepeatMode.weeks"
+            />
+            {{ t('weeks') }}
+          </label>
+        </div>
 
-        <div class="weekday-checkboxes d-flex flex-column align-items-start gap-1 mt-2" v-if="choreModel.repeatsEveryWeeks > 0">
+        <div class="weekday-checkboxes d-flex flex-column align-items-start gap-1 mt-2" v-if="choreModel.repeatMode === RepeatMode.weeks && choreModel.repeatsEveryWeeks > 0">
           <label>
             <input type="checkbox" v-model="choreModel.repeatsOnMonday" />
             {{ t('monday') }}
@@ -81,7 +101,7 @@
 
 <script setup lang="ts">
 import { ref, computed, type Ref } from 'vue';
-import type { EditChoreDto } from '../types.ts';
+import {type EditChoreDto, RepeatMode} from '../types.ts';
 import { emptyEditChoreDto } from '../helpers.ts';
 import { getState } from '../state/statePlugin.ts';
 import ImageUpload from '../ImageUpload.vue';

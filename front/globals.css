@@ -101,6 +101,10 @@ input, select, textarea {
     box-sizing: border-box;
 }
 
+input[type="radio"] {
+    width: auto;
+}
+
 input[type="checkbox"] {
     width: 20px;
     height: 20px;

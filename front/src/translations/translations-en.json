@@ -9,7 +9,7 @@
   "titlePlaceholder": "Title",
   "assignedTo": "Assigned to",
   "date": "Date",
-  "repeatEvery": "Repeat every",
+  "repeatEvery": "Every",
   "weeks": "weeks",
   "monday": "Monday",
   "tuesday": "Tuesday",
@@ -32,5 +32,7 @@
   "overdue": "Overdue",
   "done": "Done",
   "deleteUser": "Delete user",
-  "enterFullscreen": "Enter fullscreen"
+  "enterFullscreen": "Enter fullscreen",
+  "noRecurrence": "Don't repeat",
+  "days": "days"
 }

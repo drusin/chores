@@ -6,11 +6,19 @@ export interface ChoreDto extends EditChoreDto {
     doneDate: string | null,
 }
 
+export const RepeatMode = {
+    none: 'none',
+    days: 'days',
+    weeks: 'weeks',
+} as const;
+
 export interface EditChoreDto {
     assignedTo: number,
     title: string,
     plannedDate: string,
     imageName: string | null;
+    repeatMode: typeof RepeatMode[keyof typeof RepeatMode];
+    repeatsEveryDays: number,
     repeatsEveryWeeks: number,
     repeatsOnMonday: boolean,
     repeatsOnTuesday: boolean,
