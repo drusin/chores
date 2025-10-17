@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-reset-identity-columns
+      author: gemini
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: chore_entity
+        - tableExists:
+            tableName: user_entity
+      changes:
+        # For chore_entity
+        - sql: |
+            -- Check if the table has data, and if so, reset the identity counter.
+            -- H2 specific syntax to alter the identity column.
+            ALTER TABLE CHORE_ENTITY ALTER COLUMN ID RESTART WITH (SELECT COALESCE(MAX(ID), 0) + 1 FROM CHORE_ENTITY);
+          # You might want to add a rollback SQL if this is for production
+          # rollback: |
+          #   -- Rollback would depend on how the original ID generation was.
+          #   -- For identity columns, a simple rollback is not always straightforward.
+          #   -- Usually, this is a forward-only operation if data exists.
+
+        # For user_entity (if it also has existing data and needs reset)
+        - sql: |
+            ALTER TABLE USER_ENTITY ALTER COLUMN ID RESTART WITH (SELECT COALESCE(MAX(ID), 0) + 1 FROM USER_ENTITY);
+          # rollback: |
+          #   -- Similarly, rollback for identity columns needs careful consideration.
