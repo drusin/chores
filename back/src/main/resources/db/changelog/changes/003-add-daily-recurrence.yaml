@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-recurrence-fields-to-chore-table
+      author: gemini
+      changes:
+        - addColumn:
+            tableName: chore_entity
+            columns:
+              - column:
+                  name: repeats_every_days
+                  type: INT
+                  defaultValue: 0 # Default to 0 for no daily repetition
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: chore_entity
+            columns:
+              - column:
+                  name: repeat_mode
+                  type: VARCHAR(20)
+                  defaultValue: 'NONE' # Default to 'none'
+                  constraints:
+                    nullable: false
+        - sql: |
+            UPDATE chore_entity
+            SET repeat_mode = CASE
+                                  WHEN repeats_every_weeks > 0 THEN 'WEEKS'
+                                  ELSE 'NONE'
+                              END;

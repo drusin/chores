@@ -10,6 +10,8 @@ public record EditChoreDto (
     String title,
     Date plannedDate,
     String imageName,
+    RepeatMode repeatMode,
+    int repeatsEveryDays,
     int repeatsEveryWeeks,
     boolean repeatsOnMonday,
     boolean repeatsOnTuesday,

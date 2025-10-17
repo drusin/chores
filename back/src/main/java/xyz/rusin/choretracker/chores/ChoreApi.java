@@ -18,11 +18,11 @@ import java.util.List;
 @RequestMapping("/api/chores")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChoreApi {
-    
+
     private final ChoreRepository repository;
     private final UserRepository userRepository;
 
-	@GetMapping(path = "/") 
+    @GetMapping(path = "/")
     public List<ChoreEntity> getChores() {
         Date oneDayAgo = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
         List<ChoreEntity> chores = repository.findByDoneFalseOrDoneDateAfter(oneDayAgo);
@@ -51,7 +51,7 @@ public class ChoreApi {
         System.out.println("Updating chore: " + chore + " with update: " + update);
         if (!chore.isDone() && update.done()) {
             chore.setDoneDate(new Date());
-            if (update.repeatsEveryWeeks() > 0) {
+            if (update.repeatMode() != RepeatMode.NONE) {
                 createRecurring(update);
             }
         }
@@ -66,20 +66,10 @@ public class ChoreApi {
 
     private void createRecurring(EditChoreDto choreDto) {
         System.out.println("Creating recurring chore for: " + choreDto);
-        EditChoreDto nextChore = choreDto.recurrence(DateHelper.nextOccurrence(new Date(), choreDto));
+        Date newDate = choreDto.repeatMode() == RepeatMode.DAYS ?
+                DateHelper.nextOccurrence(new Date(), choreDto.repeatsEveryDays()) :
+                DateHelper.nextOccurrence(new Date(), choreDto);
+        EditChoreDto nextChore = choreDto.recurrence(newDate);
         createChore(nextChore);
-
-        // List<DayOfWeek> daysOfWeek = Helpers.getDaysOfWeek(choreDto);
-        // Optional<DayOfWeek> nextThisWeek = Helpers.findNextThisWeek(daysOfWeek);
-        // EditChoreDto nextChore;
-        // if (nextThisWeek.isPresent()) {
-        //     LocalDate nextDate = LocalDate.now().with(nextThisWeek.get());
-        //     nextChore = choreDto.recurrence(Date.from(nextDate.atStartOfDay().toInstant(ZoneOffset.UTC)));
-        // } 
-        // else {
-        //     LocalDate nextDay = Helpers.mondayInWeeks(choreDto.repeatsEveryWeeks()).with(TemporalAdjusters.nextOrSame(daysOfWeek.getFirst()));
-        //     nextChore = choreDto.recurrence(Date.from(nextDay.atStartOfDay().toInstant(ZoneOffset.UTC)));
-        // }
-        // createChore(nextChore);
     }
 }

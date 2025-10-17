@@ -1,9 +1,10 @@
 package xyz.rusin.choretracker;
 
+import xyz.rusin.choretracker.chores.Recurring;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import xyz.rusin.choretracker.chores.Recurring;
 
 public class DateHelper {
     private static final List<Integer> DAYS_OF_WEEK = List.of(
@@ -17,12 +18,7 @@ public class DateHelper {
     );
 
     public static Date nextOccurrence(Date from, Recurring recurring) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(from);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
+        Calendar cal = getNormalizedCalender(from);
 
         int today = cal.get(Calendar.DAY_OF_WEEK);
 
@@ -30,7 +26,7 @@ public class DateHelper {
         for (int i = index + 1; i < DAYS_OF_WEEK.size(); i++) {
             int day = DAYS_OF_WEEK.get(i);
             if (isRecurringOn(day, recurring)) {
-                cal.add(Calendar.DAY_OF_YEAR, day - today);
+                cal.add(Calendar.DAY_OF_YEAR, i - index);
                 return cal.getTime();
             }
         }
@@ -59,6 +55,22 @@ public class DateHelper {
             case Calendar.SUNDAY -> recurring.repeatsOnSunday();
             default -> false;
         };
+    }
+
+    public static Date nextOccurrence(Date from, int days) {
+        Calendar cal = getNormalizedCalender(from);
+        cal.add(Calendar.DAY_OF_YEAR, days);
+        return cal.getTime();
+    }
+
+    private static Calendar getNormalizedCalender(Date from) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(from);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal;
     }
 
 }

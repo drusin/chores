@@ -18,6 +18,9 @@ public class ChoreEntity {
     private Date plannedDate;
     private Date doneDate;
     private String imageName;
+    @Enumerated(EnumType.STRING)
+    private RepeatMode repeatMode;
+    private int repeatsEveryDays;
     private int repeatsEveryWeeks;
     private boolean repeatsOnMonday;
     private boolean repeatsOnTuesday;
@@ -41,6 +44,8 @@ public class ChoreEntity {
         title = update.title();
         plannedDate = update.plannedDate();
         imageName = update.imageName();
+        repeatMode = update.repeatMode();
+        repeatsEveryDays = update.repeatsEveryDays();
         repeatsEveryWeeks = update.repeatsEveryWeeks();
         repeatsOnMonday = update.repeatsOnMonday();
         repeatsOnTuesday = update.repeatsOnTuesday();
