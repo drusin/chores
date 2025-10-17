@@ -30,9 +30,9 @@ defineEmits<{
 }>();
 
 function displayDate() {
-  const dateDifference = Math.round(new Date(chore.plannedDate).getTime() - normalizeDate(new Date).getTime());
+  const dateDifference = new Date(chore.plannedDate).getTime() - normalizeDate(new Date).getTime();
   const format = new Intl.RelativeTimeFormat('de-de', { numeric: 'auto' });
-  return format.format(dateDifference / (1000 * 60 * 60 * 24), 'day');
+  return format.format(Math.round(dateDifference / (1000 * 60 * 60 * 24)), 'day');
 }
 
 </script>
