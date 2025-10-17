@@ -1,0 +1,27 @@
+
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-user-table
+      author: gemini
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          - tableExists:
+              tableName: user_entity
+      changes:
+        - createTable:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: image_name
+                  type: VARCHAR(255)

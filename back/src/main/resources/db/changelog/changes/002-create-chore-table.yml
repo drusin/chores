@@ -1,0 +1,87 @@
+
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-chore-table
+      author: gemini
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          - tableExists:
+              tableName: chore_entity
+      changes:
+        - createTable:
+            tableName: chore_entity
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: planned_date
+                  type: DATE
+              - column:
+                  name: done_date
+                  type: DATE
+              - column:
+                  name: image_name
+                  type: VARCHAR(255)
+              - column:
+                  name: repeats_every_weeks
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeats_on_monday
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeats_on_tuesday
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeats_on_wednesday
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeats_on_thursday
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeats_on_friday
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeats_on_saturday
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeats_on_sunday
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: done
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: assigned_to_id
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseColumnNames: assigned_to_id
+            baseTableName: chore_entity
+            constraintName: fk_chore_entity_assigned_to
+            referencedColumnNames: id
+            referencedTableName: user_entity
