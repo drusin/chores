@@ -7,9 +7,9 @@ export interface ChoreDto extends EditChoreDto {
 }
 
 export const RepeatMode = {
-    none: 'none',
-    days: 'days',
-    weeks: 'weeks',
+    none: 'NONE',
+    days: 'DAYS',
+    weeks: 'WEEKS',
 } as const;
 
 export interface EditChoreDto {
