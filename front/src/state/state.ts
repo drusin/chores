@@ -21,31 +21,32 @@ type Internals = {
 
 async function refreshChores(internals: Internals) {
     const choreDtos = await internals.gateway.getChores();
-    internals.state.chores.value = choreDtos.map(c => fromDto(c, internals.gateway));
+    const chores = await Promise.all(choreDtos.map(c => fromDto(c, internals.gateway)));
+    internals.state.chores.value = chores;
     sortChores(internals);
 }
 
 async function refreshUsers(internals: Internals) {
     const userDtos = await internals.gateway.getUsers();
-    const users: User[] = userDtos.map(dto => userFromDto(dto, internals.gateway));
+    const users: User[] = await Promise.all(userDtos.map(dto => userFromDto(dto, internals.gateway)));
     users.sort((left, right) => left.data.name.localeCompare(right.data.name));
     internals.state.users.value = users;
 }
 
-function userFromDto(dto: UserDto, gateway: Gateway) {
+async function userFromDto(dto: UserDto, gateway: Gateway) {
     return {
         data: dto,
-        imageUrl: dto.imageName ? gateway.getImageUrl(dto.imageName) : null,
+        imageUrl: dto.imageName ? await gateway.getImageUrl(dto.imageName) : null,
     } as User;
 }
 
-function fromDto(dto: ChoreDto, gateway: Gateway): Chore {
+async function fromDto(dto: ChoreDto, gateway: Gateway): Promise<Chore> {
     const plannedDate = normalizeDate(new Date(dto.plannedDate));
     const doneDate = dto.doneDate ? normalizeDate(new Date(dto.doneDate)) : null;
     const done = dto.done;
     return {
         data: dto,
-        imageUrl: dto.imageName ? gateway.getImageUrl(dto.imageName) : null,
+        imageUrl: dto.imageName ? await gateway.getImageUrl(dto.imageName) : null,
         doneDate,
         plannedDate,
         get status() { return statusGetter(done, plannedDate); }

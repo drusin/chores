@@ -1,4 +1,3 @@
-import gateway from "./state/gateway.ts";
 import state from "./state/state.ts";
 
 export interface ChoreDto extends EditChoreDto {
@@ -56,6 +55,17 @@ export type User = {
     imageUrl: string | null,
 }
 
-export type Gateway = ReturnType<() => typeof gateway>;
+export type Gateway = {
+    getChores: () => Promise<ChoreDto[]>;
+    createChore: (chore: EditChoreDto) => Promise<ChoreDto>;
+    editChore: (id: number, chore: EditChoreDto) => Promise<ChoreDto>;
+    deleteChore: (id: number) => Promise<void>;
+    uploadImage: (image: File) => Promise<ImageMetadataDto>;
+    getImageUrl: (imageName: string) => Promise<string | null>;
+    getUsers: () => Promise<UserDto[]>;
+    createUser: (user: EditUserDto) => Promise<UserDto>;
+    updateUser: (id: number, user: EditUserDto) => Promise<UserDto>;
+    deleteUser: (id: number) => Promise<void>;
+};
 
 export type StateApi = ReturnType<typeof state>;

@@ -6,13 +6,13 @@ const IMAGE_URL = API_URL + 'images/';
 const USERS_URL = API_URL + 'users/';
 
 export default {
-    getChores: async() => {
+    getChores: async () => {
         const request = await fetch(CHORES_URL)
         const json = await request.json();
         return json as ChoreDto[];
     },
-    
-    createChore: async(chore: EditChoreDto) => {
+
+    createChore: async (chore: EditChoreDto) => {
         const request = await fetch(CHORES_URL, {
             method: 'POST',
             headers: {
@@ -24,7 +24,7 @@ export default {
         return json as ChoreDto;
     },
 
-    editChore: async(id: number, chore: EditChoreDto) => {
+    editChore: async (id: number, chore: EditChoreDto) => {
         const request = await fetch(`${CHORES_URL}${id}`, {
             method: 'PUT',
             headers: {
@@ -36,13 +36,13 @@ export default {
         return json as ChoreDto;
     },
 
-    deleteChore: async(id: number) => {
+    deleteChore: async (id: number) => {
         await fetch(`${CHORES_URL}${id}`, {
             method: 'DELETE'
         });
     },
 
-    uploadImage: async(image: File) => {
+    uploadImage: async (image: File) => {
         const formData = new FormData();
         formData.append('image', image);
         const request = await fetch(IMAGE_URL, {
@@ -53,8 +53,8 @@ export default {
         return json as ImageMetadataDto;
     },
 
-    getImageUrl: (imageName: string) => {
-        return location.protocol + '//' + window.location.host  + IMAGE_URL + imageName;
+    getImageUrl: async (imageName: string) => {
+        return Promise.resolve(location.protocol + '//' + window.location.host + IMAGE_URL + imageName);
     },
 
     getUsers: async () => {
@@ -63,7 +63,7 @@ export default {
         return json as UserDto[];
     },
 
-    createUser: async(user: EditUserDto) => {
+    createUser: async (user: EditUserDto) => {
         const request = await fetch(USERS_URL, {
             method: 'POST',
             headers: {
@@ -75,7 +75,7 @@ export default {
         return json as UserDto;
     },
 
-    updateUser: async(id: number, user: EditUserDto) => {
+    updateUser: async (id: number, user: EditUserDto) => {
         const request = await fetch(`${USERS_URL}${id}`, {
             method: 'PUT',
             headers: {
@@ -87,7 +87,7 @@ export default {
         return json as UserDto;
     },
 
-    deleteUser: async(id: number) => {
+    deleteUser: async (id: number) => {
         await fetch(`${USERS_URL}${id}`, {
             method: 'DELETE'
         });

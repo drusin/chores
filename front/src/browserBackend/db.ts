@@ -1,9 +1,10 @@
 const DB_NAME = 'ChoreTrackerDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export const STORES = {
     USERS: 'users',
-    CHORES: 'chores'
+    CHORES: 'chores',
+    IMAGES: 'images'
 } as const;
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -30,6 +31,9 @@ function openDB(): Promise<IDBDatabase> {
             }
             if (!db.objectStoreNames.contains(STORES.CHORES)) {
                 db.createObjectStore(STORES.CHORES, { keyPath: 'id', autoIncrement: true });
+            }
+            if (!db.objectStoreNames.contains(STORES.IMAGES)) {
+                db.createObjectStore(STORES.IMAGES, { keyPath: 'name' });
             }
         };
     });
@@ -88,6 +92,18 @@ export async function remove(storeName: string, id: number): Promise<void> {
         const request = store.delete(id);
 
         request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+export async function get<T>(storeName: string, key: IDBValidKey): Promise<T | undefined> {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'readonly');
+        const store = transaction.objectStore(storeName);
+        const request = store.get(key);
+
+        request.onsuccess = () => resolve(request.result as T);
         request.onerror = () => reject(request.error);
     });
 }

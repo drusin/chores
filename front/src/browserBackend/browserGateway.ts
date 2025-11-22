@@ -1,5 +1,6 @@
 import type { EditChoreDto, EditUserDto, Gateway } from '../types';
 import { userBackend } from './userBackend';
+import { imageBackend } from './imageBackend';
 
 export const browserGateway: Gateway = {
     getChores: async () => {
@@ -18,12 +19,12 @@ export const browserGateway: Gateway = {
         throw new Error("Not implemented");
     },
 
-    uploadImage: async (_image: File) => {
-        return { name: 'dummy.png' };
+    uploadImage: async (image: File) => {
+        return imageBackend.uploadImage(image);
     },
 
-    getImageUrl: (_imageName: string) => {
-        return '';
+    getImageUrl: async (imageName: string) => {
+        return imageBackend.getImageUrl(imageName);
     },
 
     getUsers: async () => {
