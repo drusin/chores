@@ -8,24 +8,24 @@ describe('DateHelper', () => {
     // Java Calendar months are 0-indexed, same as JS Date
     const JANUARY = 0;
     const FEBRUARY = 1;
-    const MARCH = 2;
-    const APRIL = 3;
-    const MAY = 4;
+    // const MARCH = 2;
+    // const APRIL = 3;
+    // const MAY = 4;
     const JUNE = 5;
     const JULY = 6;
-    const AUGUST = 7;
-    const SEPTEMBER = 8;
-    const OCTOBER = 9;
-    const NOVEMBER = 10;
+    // const AUGUST = 7;
+    // const SEPTEMBER = 8;
+    // const OCTOBER = 9;
+    // const NOVEMBER = 10;
     const DECEMBER = 11;
 
     describe('EveryWeeksTests', () => {
         const MONDAY = date(2024, JUNE, 3);
         const TUESDAY = date(2024, JUNE, 4);
         const WEDNESDAY = date(2024, JUNE, 5);
-        const THURSDAY = date(2024, JUNE, 6);
-        const FRIDAY = date(2024, JUNE, 7);
-        const SATURDAY = date(2024, JUNE, 8);
+        // const THURSDAY = date(2024, JUNE, 6);
+        // const FRIDAY = date(2024, JUNE, 7);
+        // const SATURDAY = date(2024, JUNE, 8);
         const SUNDAY = date(2024, JUNE, 9);
 
         const baseRecurring = (): Recurring => ({
