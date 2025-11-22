@@ -11,21 +11,24 @@ export const RepeatMode = {
     weeks: 'WEEKS',
 } as const;
 
-export interface EditChoreDto {
+export interface Recurring {
+    repeatsEveryWeeks: number;
+    repeatsOnMonday: boolean;
+    repeatsOnTuesday: boolean;
+    repeatsOnWednesday: boolean;
+    repeatsOnThursday: boolean;
+    repeatsOnFriday: boolean;
+    repeatsOnSaturday: boolean;
+    repeatsOnSunday: boolean;
+}
+
+export interface EditChoreDto extends Recurring {
     assignedTo: number,
     title: string,
     plannedDate: string,
     imageName: string | null;
     repeatMode: typeof RepeatMode[keyof typeof RepeatMode];
     repeatsEveryDays: number,
-    repeatsEveryWeeks: number,
-    repeatsOnMonday: boolean,
-    repeatsOnTuesday: boolean,
-    repeatsOnWednesday: boolean,
-    repeatsOnThursday: boolean,
-    repeatsOnFriday: boolean,
-    repeatsOnSaturday: boolean,
-    repeatsOnSunday: boolean,
     done: boolean,
 }
 

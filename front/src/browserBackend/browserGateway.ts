@@ -1,22 +1,23 @@
 import type { EditChoreDto, EditUserDto, Gateway } from '../types';
 import { userBackend } from './userBackend';
 import { imageBackend } from './imageBackend';
+import { choreBackend } from './choreBackend';
 
 export const browserGateway: Gateway = {
     getChores: async () => {
-        return [];
+        return choreBackend.getAll();
     },
 
-    createChore: async (_chore: EditChoreDto) => {
-        throw new Error("Not implemented");
+    createChore: async (chore: EditChoreDto) => {
+        return choreBackend.create(chore);
     },
 
-    editChore: async (_id: number, _chore: EditChoreDto) => {
-        throw new Error("Not implemented");
+    editChore: async (id: number, chore: EditChoreDto) => {
+        return choreBackend.update(id, chore);
     },
 
-    deleteChore: async (_id: number) => {
-        throw new Error("Not implemented");
+    deleteChore: async (id: number) => {
+        return choreBackend.delete(id);
     },
 
     uploadImage: async (image: File) => {

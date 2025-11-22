@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { dateHelper } from './dateHelper';
-import type { Recurring } from './backendTypes';
+import type { Recurring } from '../types';
 
 describe('DateHelper', () => {
     const date = (year: number, month: number, day: number) => new Date(year, month, day);

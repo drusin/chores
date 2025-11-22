@@ -1,4 +1,5 @@
-import type { DateHelper, Recurring } from "./backendTypes";
+import type { Recurring } from "../types";
+import type { DateHelper } from "./backendTypes";
 
 export const dateHelper: DateHelper = {
     nextOccurrence(from: Date, recurring: Recurring): Date | null {
