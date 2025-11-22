@@ -48,7 +48,8 @@ public class DateHelperTest {
         @Test
         void nextMonth() {
             Date wedNextMonth = new GregorianCalendar(2024, Calendar.JULY, 3).getTime();
-            assertEquals(wedNextMonth, DateHelper.nextOccurrence(WEDNESDAY, baseBuilder().repeatsOnWednesday(true).repeatsEveryWeeks(4).build()));
+            assertEquals(wedNextMonth, DateHelper.nextOccurrence(WEDNESDAY,
+                    baseBuilder().repeatsOnWednesday(true).repeatsEveryWeeks(4).build()));
         }
 
         private EditChoreDto.EditChoreDtoBuilder baseBuilder() {
@@ -65,17 +66,20 @@ public class DateHelperTest {
     class EveryDaysTests {
         @Test
         void inOneDay() {
-            assertEquals(date(2024, Calendar.JANUARY, 2), DateHelper.nextOccurrence(date(2024, Calendar.JANUARY, 1), 1));
+            assertEquals(date(2024, Calendar.JANUARY, 2),
+                    DateHelper.nextOccurrence(date(2024, Calendar.JANUARY, 1), 1));
         }
 
         @Test
         void nextMonth() {
-            assertEquals(date(2024, Calendar.JANUARY, 25), DateHelper.nextOccurrence(date(2024, Calendar.FEBRUARY, 4), 10));
+            assertEquals(date(2024, Calendar.FEBRUARY, 4),
+                    DateHelper.nextOccurrence(date(2024, Calendar.JANUARY, 25), 10));
         }
 
         @Test
         void nextYear() {
-            assertEquals(date(2024, Calendar.DECEMBER, 2), DateHelper.nextOccurrence(date(2025, Calendar.JANUARY, 3), 32));
+            assertEquals(date(2025, Calendar.JANUARY, 3),
+                    DateHelper.nextOccurrence(date(2024, Calendar.DECEMBER, 2), 32));
         }
     }
 
