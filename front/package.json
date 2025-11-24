@@ -8,7 +8,7 @@
     "dev": "vite",
     "dev:browser": "vite --mode browser",
     "build": "vue-tsc -b && vite build",
-    "build:browser": "vue-tsc -b && vite build --mode browser",
+    "build:browser": "vue-tsc -b && vite build --mode browser --base=/chores/",
     "test": "vitest",
     "preview": "vite preview"
   },
